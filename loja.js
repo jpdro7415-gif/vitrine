@@ -25,7 +25,7 @@ const dadosLoja = LOJAS_VITRINE[slugLoja];
 if (!dadosLoja) {
     // Loja não encontrada no banco de dados — volta pra home
     // (substitui a página atual, não empilha mais uma)
-    window.location.replace("loading.html");
+    window.location.replace("index.html");
 }
 
 // Garante que o botão físico de voltar do celular sempre volte
@@ -58,7 +58,7 @@ function tratarVoltarNaLoja() {
     } else {
         // Não tinha nenhuma aba aberta — essa já era a tela padrão
         // da loja, então agora sim volta pra Vitrine.
-        window.location.replace("loading.html");
+        window.location.replace("index.html");
     }
 }
 
@@ -177,7 +177,7 @@ function criarItemLoja(nome, logo, aoClicar) {
 // direto pra Vitrine (o único nível que fica empilhado de verdade
 // é a ida inicial da Vitrine pra uma loja).
 criarItemLoja("Vitrine", "Vitrine-logo.png", () => {
-    window.location.replace("loading.html");
+    window.location.replace("index.html");
 });
 
 Object.keys(LOJAS_VITRINE).forEach((slug) => {

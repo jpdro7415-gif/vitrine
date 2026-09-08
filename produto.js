@@ -7,7 +7,7 @@ const produto = dadosLoja ? dadosLoja.produtos[indiceProduto] : null;
 
 if (!dadosLoja || !produto) {
     // Loja ou produto não encontrado — volta pra home
-    window.location.replace("loading.html");
+    window.location.replace("index.html");
 }
 
 // Aplica a cor da loja
