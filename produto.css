@@ -1,0 +1,298 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --cor-principal: #333333;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+
+    background: #1a1a1a;
+
+    font-family: sans-serif;
+
+    padding-bottom: 90px;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.cabecalho-produto {
+    position: sticky;
+    top: 0;
+
+    width: 100%;
+    height: 60px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 0 10px;
+
+    background: #1a1a1a;
+
+    z-index: 10;
+}
+
+.botao-voltar-produto {
+    font-size: 26px;
+    color: white;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+
+/* =========================
+   GALERIA DE IMAGENS
+========================= */
+
+.galeria-produto {
+    width: 100%;
+}
+
+.produto-imagem-grande {
+    width: 100%;
+    height: 55vh;
+
+    object-fit: cover;
+
+    background: #262626;
+
+    display: block;
+}
+
+.miniaturas-produto {
+    display: flex;
+    gap: 8px;
+
+    padding: 10px 15px;
+
+    overflow-x: auto;
+}
+
+.miniatura-produto {
+    width: 56px;
+    height: 56px;
+
+    border-radius: 10px;
+    object-fit: cover;
+
+    background: #262626;
+
+    flex-shrink: 0;
+
+    opacity: 0.55;
+
+    cursor: pointer;
+
+    border: 2px solid transparent;
+}
+
+.miniatura-produto.ativa {
+    opacity: 1;
+
+    border-color: var(--cor-principal);
+}
+
+
+/* =========================
+   DETALHES
+========================= */
+
+.produto-detalhes {
+    padding: 20px;
+}
+
+.produto-loja-linha {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 14px;
+
+    cursor: pointer;
+}
+
+.produto-loja-icone {
+    width: 26px;
+    height: 26px;
+
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.produto-loja-texto {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.produto-loja-seta {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 18px;
+}
+
+.produto-nome-grande {
+    color: white;
+    font-size: 22px;
+    font-weight: normal;
+
+    margin-bottom: 8px;
+}
+
+.produto-avaliacao {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+
+    margin-bottom: 16px;
+
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.produto-avaliacao .estrelas {
+    color: #ffb300;
+    letter-spacing: 1px;
+}
+
+.produto-vendidos-estoque {
+    margin-bottom: 16px;
+
+    color: rgba(255, 255, 255, 0.55);
+    font-size: 13px;
+}
+
+.produto-parcelamento {
+    margin-bottom: 12px;
+
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 14px;
+}
+
+.produto-precos {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+
+    margin-bottom: 6px;
+}
+
+.produto-preco-original {
+    color: rgba(255, 255, 255, 0.4);
+    font-size: 16px;
+
+    text-decoration: line-through;
+}
+
+.produto-preco-grande {
+    color: var(--cor-principal);
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.produto-frete {
+    margin-bottom: 20px;
+
+    font-size: 14px;
+}
+
+.produto-frete.gratis {
+    color: #66bb6a;
+    font-weight: bold;
+}
+
+.produto-frete.pago {
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.produto-secao-titulo {
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+
+    margin-bottom: 8px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #2a2a2a;
+}
+
+.produto-descricao {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+
+/* =========================
+   RODAPÉ
+========================= */
+
+.rodape-produto {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+
+    display: flex;
+    gap: 10px;
+
+    padding: 15px 20px;
+
+    box-sizing: border-box;
+
+    background: #262626;
+    border-top: 1px solid #333333;
+}
+
+.botao-ir-loja {
+    flex: 1;
+
+    padding: 14px;
+
+    border: 1px solid var(--cor-principal);
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: var(--cor-principal);
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.botao-adicionar-carrinho {
+    flex: 1;
+
+    padding: 14px;
+
+    border: none;
+    border-radius: 12px;
+
+    background: var(--cor-principal);
+
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+.botao-adicionar-carrinho.adicionado {
+    background: #2e7d32;
+}

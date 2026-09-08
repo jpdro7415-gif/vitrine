@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>vitrine</title>
+
+    <link rel="stylesheet" href="produto.css">
+</head>
+
+<body>
+
+    <div class="cabecalho-produto">
+        <button class="botao-voltar-produto" id="botao-voltar-produto">←</button>
+    </div>
+
+    <div class="galeria-produto">
+        <img class="produto-imagem-grande" id="produto-imagem-grande" src="" alt="">
+        <div class="miniaturas-produto" id="miniaturas-produto"></div>
+    </div>
+
+    <div class="produto-detalhes">
+        <div class="produto-loja-linha" id="produto-loja-linha">
+            <img class="produto-loja-icone" id="produto-loja-icone" src="" alt="">
+            <span class="produto-loja-texto" id="produto-loja-nome"></span>
+            <span class="produto-loja-seta">›</span>
+        </div>
+
+        <h1 class="produto-nome-grande" id="produto-nome-grande"></h1>
+
+        <div class="produto-avaliacao" id="produto-avaliacao"></div>
+
+        <div class="produto-vendidos-estoque" id="produto-vendidos-estoque"></div>
+
+        <div class="produto-precos">
+            <span class="produto-preco-original" id="produto-preco-original"></span>
+            <span class="produto-preco-grande" id="produto-preco-grande"></span>
+        </div>
+
+        <div class="produto-parcelamento" id="produto-parcelamento"></div>
+
+        <div class="produto-frete" id="produto-frete"></div>
+
+        <div class="produto-secao-titulo">Descrição</div>
+        <p class="produto-descricao" id="produto-descricao"></p>
+    </div>
+
+    <div class="rodape-produto">
+        <button class="botao-ir-loja" id="botao-ir-loja">
+            Vá até a loja
+        </button>
+        <button class="botao-adicionar-carrinho" id="botao-adicionar-carrinho">
+            Adicionar ao carrinho
+        </button>
+    </div>
+
+    <script src="lojas-dados.js"></script>
+    <script src="carrinho-dados.js"></script>
+    <script src="produto.js"></script>
+
+</body>
+
+</html>

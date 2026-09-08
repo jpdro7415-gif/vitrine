@@ -1,0 +1,867 @@
+/* =========================
+   RESET
+========================= */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   PÁGINA
+========================= */
+
+body {
+    width: 100%;
+    height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #333333;
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.mancha {
+    position: fixed;
+
+    filter: blur(50px);
+
+    z-index: -1;
+
+    pointer-events: none;
+}
+
+.mancha-1 {
+    width: 44vmax;
+    height: 38vmax;
+
+    top: -10%;
+    left: -10%;
+
+    background: #4a4a4a;
+
+    border-radius: 40% 60% 65% 35% / 45% 40% 60% 55%;
+
+    animation: mancha-flutua-1 22s ease-in-out infinite;
+}
+
+.mancha-2 {
+    width: 40vmax;
+    height: 46vmax;
+
+    top: 30%;
+    left: 55%;
+
+    background: #2e2e2e;
+
+    border-radius: 60% 40% 30% 70% / 55% 65% 35% 45%;
+
+    animation: mancha-flutua-2 26s ease-in-out infinite;
+    animation-delay: -8s;
+}
+
+.mancha-3 {
+    width: 37vmax;
+    height: 33vmax;
+
+    top: 55%;
+    left: -5%;
+
+    background: #3a3a3a;
+
+    border-radius: 50% 50% 40% 60% / 60% 45% 55% 40%;
+
+    animation: mancha-flutua-3 19s ease-in-out infinite;
+    animation-delay: -14s;
+}
+
+.mancha-4 {
+    width: 36vmax;
+    height: 40vmax;
+
+    top: -5%;
+    left: 60%;
+
+    background: #262626;
+
+    border-radius: 35% 65% 55% 45% / 40% 60% 40% 60%;
+
+    animation: mancha-flutua-4 24s ease-in-out infinite;
+    animation-delay: -4s;
+}
+
+@keyframes mancha-flutua-1 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(55%, 35%) scale(1.3) rotate(20deg);
+    }
+    55% {
+        transform: translate(-25%, 70%) scale(0.8) rotate(-15deg);
+    }
+    80% {
+        transform: translate(-55%, -30%) scale(1.15) rotate(10deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes mancha-flutua-2 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    30% {
+        transform: translate(-65%, 45%) scale(0.75) rotate(-25deg);
+    }
+    60% {
+        transform: translate(-30%, -60%) scale(1.25) rotate(15deg);
+    }
+    85% {
+        transform: translate(45%, 25%) scale(1) rotate(-10deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes mancha-flutua-3 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    35% {
+        transform: translate(50%, -55%) scale(1.2) rotate(18deg);
+    }
+    65% {
+        transform: translate(75%, 30%) scale(0.8) rotate(-12deg);
+    }
+    90% {
+        transform: translate(-25%, 45%) scale(1.1) rotate(8deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes mancha-flutua-4 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    20% {
+        transform: translate(-45%, -50%) scale(0.8) rotate(-18deg);
+    }
+    50% {
+        transform: translate(35%, 60%) scale(1.3) rotate(12deg);
+    }
+    75% {
+        transform: translate(60%, -20%) scale(1) rotate(-8deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+
+/* =========================
+   CABEÇALHO / TEXTURA
+========================= */
+
+.textura-vitrine {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 70px;
+
+    z-index: 1;
+}
+
+
+/* =========================
+   CONTAINER DE LOADING
+========================= */
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.logo-vitrine {
+    position: absolute;
+
+    top: 5px;
+    left: 5px;
+
+    width: 60px;
+    height: 60px;
+
+    object-fit: cover;
+
+    border-radius: 20px;
+
+    z-index: 11;
+}
+
+
+
+/* =========================
+   PESQUISA
+========================= */
+
+.pesquisa-vitrine {
+    position: absolute;
+    top: 0;
+    left: 80px;
+
+    width: calc(100% - 80px);
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+
+    color: white;
+    z-index: 5;
+}
+
+
+/* Lupa */
+
+.lupa {
+    font-size: 34px;
+
+    color: white;
+
+    transition: color 0.3s ease;
+}
+
+
+/* Gatilho (abre a tela de pesquisa) */
+
+.campo-abre-pesquisa {
+    display: flex;
+    align-items: center;
+
+    width: 180px;
+    margin-left: 8px;
+
+    cursor: pointer;
+}
+
+.campo-pesquisa-texto {
+    color: white;
+    opacity: 0.7;
+
+    font-size: 18px;
+
+    font-family: inherit;
+}
+
+
+/* =========================
+   TELA DE PESQUISA
+========================= */
+
+.tela-pesquisa {
+    display: none;
+
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+
+    background: #121212;
+
+    z-index: 2000;
+}
+
+.tela-pesquisa.aberta {
+    display: block;
+}
+
+.cabecalho-tela-pesquisa {
+    display: flex;
+    align-items: center;
+
+    width: 100%;
+    height: 70px;
+
+    padding: 0 15px;
+
+    gap: 12px;
+
+    border-bottom: 1px solid #333;
+}
+
+.botao-voltar-pesquisa {
+    font-size: 26px;
+    color: white;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+.campo-pesquisa-tela {
+    flex: 1;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: white;
+    font-size: 19px;
+
+    font-family: inherit;
+}
+
+.campo-pesquisa-tela::placeholder {
+    color: white;
+    opacity: 0.5;
+}
+
+
+/* =========================
+   PESQUISAS RECENTES
+========================= */
+
+.secao-recentes {
+    padding: 20px 20px 0;
+}
+
+.secao-recentes h3 {
+    color: white;
+    font-size: 16px;
+    opacity: 0.6;
+
+    font-weight: normal;
+
+    margin-bottom: 10px;
+}
+
+.lista-recentes {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-recente {
+    display: flex;
+    align-items: center;
+
+    padding: 12px 0;
+
+    cursor: pointer;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.icone-recente {
+    font-size: 18px;
+    opacity: 0.6;
+
+    margin-right: 14px;
+}
+
+.texto-recente {
+    flex: 1;
+
+    color: white;
+    font-size: 17px;
+}
+
+.remover-recente {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+
+    color: white;
+    opacity: 0.5;
+    font-size: 16px;
+
+    cursor: pointer;
+}
+
+.remover-recente:active {
+    opacity: 1;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+
+/* =========================
+   PESQUISAS POPULARES
+========================= */
+
+.secao-populares {
+    padding: 20px 20px 0;
+}
+
+.secao-populares h3 {
+    color: white;
+    font-size: 16px;
+    opacity: 0.6;
+
+    font-weight: normal;
+
+    margin-bottom: 10px;
+}
+
+.lista-populares {
+    display: flex;
+    flex-direction: column;
+}
+
+.item-popular {
+    display: flex;
+    align-items: center;
+
+    padding: 12px 0;
+
+    cursor: pointer;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.numero-popular {
+    width: 20px;
+
+    color: #ff7043;
+    font-size: 16px;
+    font-weight: bold;
+
+    margin-right: 14px;
+}
+
+.texto-popular {
+    flex: 1;
+
+    color: white;
+    font-size: 17px;
+}
+
+
+/* =========================
+   LINHA DIVISÓRIA
+========================= */
+
+.linha-vitrine {
+    position: absolute;
+
+    top: 70px;
+    left: 0;
+
+    width: 100%;
+    height: 1px;
+
+    background: #808080;
+
+    z-index: 3;
+}
+
+
+/* =========================
+   CATEGORIAS PRINCIPAIS (FIXAS)
+========================= */
+
+.categorias-fixas {
+    position: fixed;
+
+    top: 71px;
+    left: 0;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 15px;
+
+    box-sizing: border-box;
+
+    overflow-x: auto;
+    white-space: nowrap;
+
+    background: transparent;
+    border-bottom: none;
+
+    z-index: 2;
+}
+
+.categoria-fixa {
+    flex-shrink: 0;
+
+    padding: 8px 16px;
+
+    border-radius: 20px;
+
+    background: #333333;
+
+    color: white;
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   MENU DE APLICATIVOS
+========================= */
+
+.menu-aplicativos {
+    position: fixed;
+
+    top: 70px;
+    left: 0;
+
+    width: 65vw;
+    height: calc(100vh - 70px);
+
+    background: rgba(51, 51, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    z-index: 1000;
+
+    padding: 30px 20px;
+
+    display: none;
+}
+
+.menu-aplicativos.aberta {
+    display: block;
+}
+
+.menu-aplicativos h2 {
+    color: white;
+
+    font-size: 22px;
+
+    margin-bottom: 0;
+}
+
+
+/* =========================
+   APLICATIVOS
+========================= */
+
+.aplicativo {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    box-sizing: border-box;
+
+    border-radius: 12px;
+
+    background: #3d4046;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+.icone-aplicativo {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+.lista-aplicativos {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-top: 15px;
+
+    max-height: calc(100vh - 220px);
+    overflow-y: auto;
+}
+
+
+                                              .menu-pontinhos {
+    font-size: 28px;
+    color: white;
+    margin-left: auto;
+    margin-right: 10px;
+    cursor: pointer;
+    line-height: 1;
+}                                             .menu-pontinhos {
+    font-size: 28px;
+    color: white;
+    margin-left: auto;
+    margin-right: 10px;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+}
+
+.quadro-categorias {
+    display: none;
+
+    position: fixed;
+
+    top: 70px;
+    right: 0;
+
+    width: 220px;
+    height: calc(100vh - 70px);
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: rgba(51, 51, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
+
+    z-index: 1000;
+}
+
+.quadro-categorias.aberto {
+    display: block;
+}
+
+
+/* =========================
+   PAINEL DE FILTRO
+========================= */
+
+.painel-filtro {
+    display: none;
+
+    position: fixed;
+
+    top: 70px;
+    right: 0;
+
+    width: 220px;
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: rgba(51, 51, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
+
+    z-index: 1000;
+}
+
+.painel-filtro.aberto {
+    display: block;
+}
+
+.filtro-item {
+    padding: 14px 4px;
+
+    color: white;
+    font-size: 16px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+    cursor: pointer;
+}
+
+.filtro-item.ativo {
+    color: #ff7043;
+    font-weight: bold;
+}
+
+.filtro-limpar {
+    margin-top: 16px;
+
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 14px;
+
+    text-align: center;
+
+    cursor: pointer;
+}
+
+.categoria {
+    padding: 14px 4px;
+
+    display: flex;
+    align-items: center;
+
+    color: white;
+    font-size: 17px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+    cursor: pointer;
+}
+
+.opcao-icone {
+    margin-right: 10px;
+
+    font-size: 18px;
+
+    width: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carrinho-contador {
+    margin-left: 8px;
+
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #e63946;
+
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.carrinho-contador.visivel {
+    display: flex;
+}
+                                              .abas {
+    position: absolute;
+    top: 128px;
+    left: 0;
+
+    width: 100%;
+    height: calc(100vh - 128px);
+
+    background: transparent;
+
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+
+    z-index: 1;
+
+    display: flex;
+    flex-direction: column;
+}
+
+.fileira-abas {
+    width: 100%;
+
+    display: flex;
+    align-items: flex-start;
+
+    gap: 15px;
+    padding: 0 15px 15px;
+
+    box-sizing: border-box;
+}
+
+.card {
+    flex: 1 1 0;
+
+    display: flex;
+    flex-direction: column;
+
+    box-sizing: border-box;
+    padding: 14px;
+
+    cursor: pointer;
+
+    border-radius: 16px;
+    background: #333333;
+}
+
+.card-titulo {
+    color: white;
+    font-size: 22px;
+    text-align: center;
+}
+
+.card-info {
+    width: 100%;
+    height: 70px;
+}                                             .grupo-abas {
+    width: 100%;
+    flex: 0 0 auto;
+
+    display: flex;
+    flex-direction: column;
+
+    margin-bottom: 110px;
+
+    position: relative;
+    z-index: 1;
+}
+
+.grupo-titulo {
+    display: flex;
+    align-items: center;
+
+    margin: 10px 20px;
+}
+
+.icone-titulo {
+    width: 28px;
+    height: 28px;
+
+    border-radius: 50%;
+    object-fit: cover;
+
+    margin-right: 10px;
+}
+
+.grupo-abas h2 {
+    color: white;
+    font-size: 20px;
+    text-align: left;
+}

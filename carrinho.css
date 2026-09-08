@@ -1,0 +1,195 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+
+    background: #1a1a1a;
+
+    font-family: sans-serif;
+
+    padding-bottom: 80px;
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+.cabecalho-carrinho {
+    position: sticky;
+    top: 0;
+
+    width: 100%;
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    padding: 0 15px;
+
+    background: #1a1a1a;
+    border-bottom: 1px solid #333333;
+
+    z-index: 10;
+}
+
+.botao-voltar-carrinho {
+    font-size: 26px;
+    color: white;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+
+    line-height: 1;
+}
+
+.cabecalho-carrinho h1 {
+    color: white;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+
+/* =========================
+   LISTA DE ITENS
+========================= */
+
+.lista-carrinho {
+    display: flex;
+    flex-direction: column;
+
+    padding: 15px;
+    gap: 12px;
+}
+
+.item-carrinho {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background: #262626;
+}
+
+.item-carrinho-imagem {
+    width: 64px;
+    height: 64px;
+
+    border-radius: 10px;
+    object-fit: cover;
+
+    background: #333333;
+
+    flex-shrink: 0;
+}
+
+.item-carrinho-info {
+    flex: 1;
+
+    min-width: 0;
+}
+
+.item-carrinho-loja {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 12px;
+
+    margin-bottom: 2px;
+}
+
+.item-carrinho-nome {
+    color: white;
+    font-size: 15px;
+
+    margin-bottom: 4px;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.item-carrinho-preco {
+    color: #ff7043;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.item-carrinho-quantidade {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 13px;
+
+    margin-left: 8px;
+}
+
+.item-carrinho-remover {
+    font-size: 22px;
+    color: rgba(255, 255, 255, 0.5);
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   CARRINHO VAZIO
+========================= */
+
+.carrinho-vazio {
+    display: none;
+
+    width: 100%;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 15px;
+}
+
+
+/* =========================
+   RODAPÉ (TOTAL)
+========================= */
+
+.rodape-carrinho {
+    display: none;
+
+    position: fixed;
+    bottom: 0;
+    left: 0;
+
+    width: 100%;
+
+    padding: 18px 20px;
+
+    box-sizing: border-box;
+
+    background: #262626;
+    border-top: 1px solid #333333;
+
+    align-items: center;
+    justify-content: space-between;
+
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.rodape-carrinho.visivel {
+    display: flex;
+}

@@ -1,0 +1,528 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --cor-principal: #333333;
+    --cor-fundo: #333333;
+    --cor-mancha-base: #ffffff;
+}
+
+body {
+    width: 100%;
+    min-height: 100vh;
+
+    background: var(--cor-fundo);
+
+    overflow: hidden;
+
+    position: relative;
+}
+
+.mancha {
+    position: fixed;
+
+    filter: blur(50px);
+
+    z-index: -1;
+
+    pointer-events: none;
+}
+
+.mancha-1 {
+    width: 44vmax;
+    height: 38vmax;
+
+    top: -10%;
+    left: -10%;
+
+    background: var(--cor-mancha-base);
+
+    border-radius: 40% 60% 65% 35% / 45% 40% 60% 55%;
+
+    animation: mancha-flutua-1 22s ease-in-out infinite;
+}
+
+.mancha-2 {
+    width: 40vmax;
+    height: 46vmax;
+
+    top: 30%;
+    left: 55%;
+
+    background: color-mix(in srgb, var(--cor-mancha-base) 90%, black);
+
+    border-radius: 60% 40% 30% 70% / 55% 65% 35% 45%;
+
+    animation: mancha-flutua-2 26s ease-in-out infinite;
+    animation-delay: -8s;
+}
+
+.mancha-3 {
+    width: 37vmax;
+    height: 33vmax;
+
+    top: 55%;
+    left: -5%;
+
+    background: color-mix(in srgb, var(--cor-mancha-base) 80%, black);
+
+    border-radius: 50% 50% 40% 60% / 60% 45% 55% 40%;
+
+    animation: mancha-flutua-3 19s ease-in-out infinite;
+    animation-delay: -14s;
+}
+
+.mancha-4 {
+    width: 36vmax;
+    height: 40vmax;
+
+    top: -5%;
+    left: 60%;
+
+    background: var(--cor-mancha-base);
+
+    border-radius: 35% 65% 55% 45% / 40% 60% 40% 60%;
+
+    animation: mancha-flutua-4 24s ease-in-out infinite;
+    animation-delay: -4s;
+}
+
+@keyframes mancha-flutua-1 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    25% {
+        transform: translate(55%, 35%) scale(1.3) rotate(20deg);
+    }
+    55% {
+        transform: translate(-25%, 70%) scale(0.8) rotate(-15deg);
+    }
+    80% {
+        transform: translate(-55%, -30%) scale(1.15) rotate(10deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes mancha-flutua-2 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    30% {
+        transform: translate(-65%, 45%) scale(0.75) rotate(-25deg);
+    }
+    60% {
+        transform: translate(-30%, -60%) scale(1.25) rotate(15deg);
+    }
+    85% {
+        transform: translate(45%, 25%) scale(1) rotate(-10deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes mancha-flutua-3 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    35% {
+        transform: translate(50%, -55%) scale(1.2) rotate(18deg);
+    }
+    65% {
+        transform: translate(75%, 30%) scale(0.8) rotate(-12deg);
+    }
+    90% {
+        transform: translate(-25%, 45%) scale(1.1) rotate(8deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+@keyframes mancha-flutua-4 {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    20% {
+        transform: translate(-45%, -50%) scale(0.8) rotate(-18deg);
+    }
+    50% {
+        transform: translate(35%, 60%) scale(1.3) rotate(12deg);
+    }
+    75% {
+        transform: translate(60%, -20%) scale(1) rotate(-8deg);
+    }
+    100% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+}
+
+
+/* =========================
+   CABEÇALHO DA LOJA
+========================= */
+
+.cabecalho-loja {
+    position: sticky;
+    top: 0;
+
+    width: 100%;
+    height: 70px;
+
+    background: transparent;
+
+    border-bottom: 1px solid var(--cor-principal);
+
+    z-index: 10;
+}
+
+.logo-loja {
+    position: absolute;
+
+    top: 5px;
+    left: 5px;
+
+    width: 60px;
+    height: 60px;
+
+    object-fit: cover;
+
+    border-radius: 20px;
+
+    cursor: pointer;
+}
+
+.pesquisa-loja {
+    position: absolute;
+
+    top: 0;
+    left: 80px;
+
+    width: calc(100% - 130px);
+    height: 70px;
+
+    display: flex;
+    align-items: center;
+}
+
+.menu-pontinhos-loja {
+    position: absolute;
+
+    top: 0;
+    right: 10px;
+
+    height: 70px;
+
+    font-size: 28px;
+    color: #999999;
+
+    background: none;
+    border: none;
+
+    cursor: pointer;
+}
+
+#opcao-carrinho {
+    display: flex;
+    align-items: center;
+}
+
+.carrinho-contador {
+    margin-left: 8px;
+
+    min-width: 18px;
+    height: 18px;
+    padding: 0 4px;
+
+    display: none;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #e63946;
+
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.carrinho-contador.visivel {
+    display: flex;
+}
+
+
+/* =========================
+   MENU DE OPÇÕES (⋮)
+========================= */
+
+.menu-opcoes-loja {
+    display: none;
+
+    position: fixed;
+
+    top: 70px;
+    right: 0;
+
+    width: 220px;
+    height: calc(100vh - 70px);
+
+    padding: 20px;
+
+    box-sizing: border-box;
+
+    background: rgba(51, 51, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
+
+    z-index: 1000;
+}
+
+.menu-opcoes-loja.aberto {
+    display: block;
+}
+
+.opcao-loja {
+    padding: 14px 4px;
+
+    display: flex;
+    align-items: center;
+
+    color: white;
+    font-size: 17px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+
+    cursor: pointer;
+}
+
+.opcao-icone {
+    margin-right: 10px;
+
+    font-size: 18px;
+
+    width: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.lupa-loja {
+    font-size: 34px;
+    color: #666666;
+}
+
+.pesquisa-loja-texto {
+    margin-left: 8px;
+
+    color: #666666;
+
+    opacity: 1;
+
+    font-size: 18px;
+}
+
+
+/* =========================
+   MENU DE LOJAS
+========================= */
+
+.menu-lojas {
+    display: none;
+
+    position: fixed;
+
+    top: 70px;
+    left: 0;
+
+    width: 260px;
+    height: calc(100vh - 70px);
+
+    padding: 30px 20px;
+
+    background: rgba(51, 51, 51, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    box-shadow: 5px 0 20px rgba(0, 0, 0, 0.4);
+
+    overflow-y: auto;
+
+    z-index: 20;
+}
+
+.menu-lojas.aberto {
+    display: block;
+}
+
+.lista-lojas {
+    display: flex;
+    flex-direction: column;
+
+    gap: 10px;
+
+    margin-top: 15px;
+}
+
+.loja-item {
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 12px 14px;
+
+    box-sizing: border-box;
+
+    border-radius: 12px;
+
+    background: #3d4046;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    color: white;
+
+    font-size: 17px;
+
+    cursor: pointer;
+}
+
+.icone-loja-item {
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+    object-fit: contain;
+
+    flex-shrink: 0;
+}
+
+
+/* =========================
+   CATEGORIAS PRINCIPAIS (FIXAS)
+========================= */
+
+.categorias-fixas {
+    position: sticky;
+    top: 70px;
+
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 12px 15px;
+
+    box-sizing: border-box;
+
+    overflow-x: auto;
+    white-space: nowrap;
+
+    background: transparent;
+
+    z-index: 9;
+}
+
+.categoria-fixa {
+    flex-shrink: 0;
+
+    padding: 8px 16px;
+
+    border-radius: 20px;
+
+    background: color-mix(in srgb, var(--cor-principal) 80%, white);
+
+    color: white;
+    font-size: 15px;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   GRADE DE PRODUTOS
+========================= */
+
+.grade-produtos {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+
+    padding: 15px;
+
+    box-sizing: border-box;
+}
+
+.produto-card {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: 16px;
+    overflow: hidden;
+
+    background: #333333;
+
+    cursor: pointer;
+}
+
+.produto-imagem {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+
+    object-fit: cover;
+
+    background: #2a2a2a;
+}
+
+.produto-info {
+    padding: 10px;
+}
+
+.produto-nome {
+    color: white;
+    font-size: 14px;
+
+    margin-bottom: 6px;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.produto-preco {
+    color: var(--cor-principal);
+    font-size: 15px;
+    font-weight: bold;
+}
+
+
+/* =========================
+   LOJA SEM PRODUTOS
+========================= */
+
+.loja-vazia {
+    display: none;
+
+    width: 100%;
+
+    padding: 60px 20px;
+
+    text-align: center;
+
+    color: rgba(0, 0, 0, 0.5);
+    font-size: 15px;
+}

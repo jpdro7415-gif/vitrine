@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>vitrine</title>
+
+    <link rel="stylesheet" href="loja.css">
+</head>
+
+<body>
+
+    <!-- Manchas do fundo -->
+    <div class="mancha mancha-1"></div>
+    <div class="mancha mancha-2"></div>
+    <div class="mancha mancha-3"></div>
+    <div class="mancha mancha-4"></div>
+
+    <div class="cabecalho-loja" id="cabecalho-loja">
+
+        <img src="" alt="" class="logo-loja" id="logo-loja">
+
+        <div class="pesquisa-loja">
+            <span class="lupa-loja">⌕</span>
+            <span class="pesquisa-loja-texto">Pesquisa</span>
+        </div>
+
+        <button class="menu-pontinhos-loja" id="menu-pontinhos-loja">⋮</button>
+
+    </div>
+
+    <!-- Menu de opções (abre pelos três pontinhos) -->
+    <div class="menu-opcoes-loja" id="menu-opcoes-loja">
+        <div class="opcao-loja" id="opcao-carrinho">
+            <span class="opcao-icone">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+            </span>
+            Carrinho
+            <span class="carrinho-contador" id="carrinho-contador"></span>
+        </div>
+        <div class="opcao-loja">
+            <span class="opcao-icone">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="4" y1="21" x2="4" y2="14"></line>
+                    <line x1="4" y1="10" x2="4" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12" y2="3"></line>
+                    <line x1="20" y1="21" x2="20" y2="16"></line>
+                    <line x1="20" y1="12" x2="20" y2="3"></line>
+                    <line x1="1" y1="14" x2="7" y2="14"></line>
+                    <line x1="9" y1="8" x2="15" y2="8"></line>
+                    <line x1="17" y1="16" x2="23" y2="16"></line>
+                </svg>
+            </span>
+            Filtro
+        </div>
+        <div class="opcao-loja">
+            <span class="opcao-icone">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+                </svg>
+            </span>
+            Favoritos
+        </div>
+        <div class="opcao-loja">
+            <span class="opcao-icone">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <line x1="12" y1="16" x2="12" y2="12"></line>
+                    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+            </span>
+            Sobre a loja
+        </div>
+        <div class="opcao-loja">
+            <span class="opcao-icone">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"></circle>
+                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+                </svg>
+            </span>
+            Configurações
+        </div>
+    </div>
+
+    <!-- Lista de lojas (abre ao tocar no ícone) -->
+    <div class="menu-lojas" id="menu-lojas">
+        <div class="lista-lojas" id="lista-lojas"></div>
+    </div>
+
+    <!-- Categorias principais (fixas) -->
+    <div class="categorias-fixas">
+        <span class="categoria-fixa">Ofertas</span>
+        <span class="categoria-fixa">Eletrônicos</span>
+        <span class="categoria-fixa">Moda</span>
+        <span class="categoria-fixa">Casa</span>
+        <span class="categoria-fixa">Beleza</span>
+        <span class="categoria-fixa">Esportes</span>
+    </div>
+
+    <div class="grade-produtos" id="grade-produtos"></div>
+
+    <div class="loja-vazia" id="loja-vazia">
+        Essa loja ainda não tem produtos cadastrados.
+    </div>
+
+    <script src="lojas-dados.js"></script>
+    <script src="carrinho-dados.js"></script>
+    <script src="loja.js"></script>
+
+</body>
+
+</html>
