@@ -29,12 +29,6 @@ const CONFIG_TELAS = [
         aoFechar: () => document.querySelector("#campo-pesquisa-tela").value = ""
     },
     {
-        gatilho: document.querySelector(".logo-vitrine"),
-        elemento: document.querySelector(".menu-aplicativos"),
-        classe: "aberta",
-        fecharAoClicarFora: true
-    },
-    {
         gatilho: document.querySelector("#botao-categorias"),
         elemento: document.querySelector("#quadro-categorias"),
         classe: "aberto",
@@ -254,29 +248,12 @@ function criarGrupoLoja(slug, loja) {
     return grupo;
 }
 
-/**
- * @param {string} slug
- * @param {any} loja
- */
-function criarIconeMenu(slug, loja) {
-    const item = document.createElement("div");
-    item.className = "aplicativo";
-    item.dataset.app = slug;
-    item.innerHTML = `
-        <img src="${loja.logo || ''}" class="icone-aplicativo" alt="${loja.nome}">
-        <span>${loja.nome}</span>
-    `;
-    return item;
-}
-
 function renderizarLojasParceiras() {
     const containerAbas = document.querySelector("#abas-lojas");
-    const containerMenu = document.querySelector("#lista-aplicativos-parceiras");
 
-    if (!containerAbas || !containerMenu) return;
+    if (!containerAbas) return;
 
     containerAbas.innerHTML = "";
-    containerMenu.innerHTML = "";
 
     const slugs = Object.keys(LOJAS_VITRINE);
 
@@ -293,26 +270,11 @@ function renderizarLojasParceiras() {
     slugs.forEach((slug) => {
         const loja = LOJAS_VITRINE[slug];
         containerAbas.appendChild(criarGrupoLoja(slug, loja));
-        containerMenu.appendChild(criarIconeMenu(slug, loja));
     });
 }
 
 function iniciarLojasEFiltros() {
 renderizarLojasParceiras();
-
-    // Clicar numa loja da lista leva pra página daquela loja
-    // (a "vitrine" fica em casa, o resto abre loja.html)
-    document.querySelectorAll(".aplicativo").forEach((item) => {
-        item.addEventListener("click", (evento) => {
-            evento.stopPropagation();
-
-            const loja = item.dataset.app;
-
-            if (loja && loja !== "vitrine") {
-                window.location.href = "loja.html?loja=" + loja;
-            }
-        });
-    });
 
     // Contador do carrinho no painel de categorias
     const carrinhoContadorVitrine = document.querySelector("#carrinho-contador-vitrine");
