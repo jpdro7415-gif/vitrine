@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Seja parceiro da Vitrine</title>
+
+    <link rel="stylesheet" href="loading.css">
+
+    <style>
+        body {
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-y: auto;
+            height: auto;
+            min-height: 100vh;
+        }
+
+        .parceiro-pagina {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .parceiro-titulo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .parceiro-subtitulo {
+            font-size: 15px;
+            opacity: 0.75;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .parceiro-campo {
+            margin-bottom: 20px;
+        }
+
+        .parceiro-campo label {
+            display: block;
+            font-size: 14px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .parceiro-campo input,
+        .parceiro-campo textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #262626;
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .parceiro-campo input:focus,
+        .parceiro-campo textarea:focus {
+            outline: none;
+            border-color: #ff7043;
+        }
+
+        .parceiro-campo textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        .parceiro-cor-linha {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .parceiro-cor-linha input[type="color"] {
+            width: 52px;
+            height: 52px;
+            padding: 0;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #262626;
+        }
+
+        .parceiro-botao {
+            width: 100%;
+            padding: 16px;
+            margin-top: 8px;
+
+            border: none;
+            border-radius: 14px;
+
+            background: #ff7043;
+            color: #1a1a1a;
+
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+
+            cursor: pointer;
+            transition: filter 0.2s ease;
+        }
+
+        .parceiro-botao:active {
+            filter: brightness(0.9);
+        }
+
+        .parceiro-botao:disabled {
+            opacity: 0.6;
+            cursor: default;
+        }
+
+        .parceiro-status {
+            margin-top: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .parceiro-status.mostrar {
+            display: block;
+        }
+
+        .parceiro-status.sucesso {
+            color: #7ed957;
+        }
+
+        .parceiro-status.erro {
+            color: #ff6b6b;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Manchas do fundo -->
+    <div class="mancha mancha-1"></div>
+    <div class="mancha mancha-2"></div>
+    <div class="mancha mancha-3"></div>
+    <div class="mancha mancha-4"></div>
+
+    <div class="parceiro-pagina">
+        <div class="parceiro-titulo">Seja parceiro da Vitrine</div>
+        <div class="parceiro-subtitulo">
+            Preencha os dados da sua loja abaixo. A gente confere e,
+            assim que aprovado, sua loja aparece pra todo mundo que
+            visita a Vitrine.
+        </div>
+
+        <form id="form-parceiro">
+            <div class="parceiro-campo">
+                <label for="campo-nome">Nome da loja</label>
+                <input type="text" id="campo-nome" required>
+            </div>
+
+            <div class="parceiro-campo">
+                <label for="campo-contato">WhatsApp ou e-mail pra contato</label>
+                <input type="text" id="campo-contato" required>
+            </div>
+
+            <div class="parceiro-campo">
+                <label for="campo-cor">Cor da sua loja</label>
+                <div class="parceiro-cor-linha">
+                    <input type="color" id="campo-cor" value="#ff7043">
+                </div>
+            </div>
+
+            <div class="parceiro-campo">
+                <label for="campo-mensagem">Conte um pouco sobre sua loja (opcional)</label>
+                <textarea id="campo-mensagem"></textarea>
+            </div>
+
+            <button type="submit" class="parceiro-botao" id="botao-enviar">
+                Enviar cadastro
+            </button>
+
+            <div class="parceiro-status" id="status-envio"></div>
+        </form>
+    </div>
+
+    <!-- Navegação entre a Vitrine e o cadastro de parceiro -->
+    <div class="nav-vitrine">
+        <a href="index.html" class="nav-vitrine-item">Início</a>
+        <a href="parceiros.html" class="nav-vitrine-item nav-vitrine-ativo">Parceiro</a>
+    </div>
+
+    <script src="cadastro-parceiros.js"></script>
+</body>
+
+</html>
