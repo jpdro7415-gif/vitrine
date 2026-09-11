@@ -192,130 +192,247 @@ document.querySelectorAll(".item-popular").forEach((item) => {
     });
 });
 
-// Clicar numa loja da lista leva pra página daquela loja
-// (a "vitrine" fica em casa, o resto abre loja.html)
-document.querySelectorAll(".aplicativo").forEach((item) => {
-    item.addEventListener("click", (evento) => {
-        evento.stopPropagation();
-
-        const loja = item.dataset.app;
-
-        if (loja && loja !== "vitrine") {
-            window.location.href = "loja.html?loja=" + loja;
-        }
-    });
-});
-
-// Contador do carrinho no painel de categorias
-const carrinhoContadorVitrine = document.querySelector("#carrinho-contador-vitrine");
-
-function atualizarContadorCarrinhoVitrine() {
-    const total = contarItensCarrinho();
-
-    carrinhoContadorVitrine.textContent = total;
-    carrinhoContadorVitrine.classList.toggle("visivel", total > 0);
-}
-
-atualizarContadorCarrinhoVitrine();
-
-document.querySelector("#opcao-carrinho-vitrine").addEventListener("click", (evento) => {
-    evento.stopPropagation();
-    window.location.href = "carrinho.html";
-});
-
-
 /* =========================
-   FILTRO DE LOJAS
-
-   "Lojas mais confiáveis" = tem mais de 1 ano na Vitrine
-   "Com promoção" = algum produto com preço original (desconto)
-   "Frete grátis" = algum produto com frete grátis
+   RENDERIZA AS LOJAS PARCEIRAS
+   (gerado a partir dos dados que vêm do
+   Supabase, em vez de ficar fixo no HTML)
 ========================= */
 
-const filtrosAtivos = new Set();
+/** @param {any} produto */
+function criarCardProdutoHome(produto) {
+    const card = document.createElement("div");
+    card.className = "card";
 
-/** @param {string} slug */
-function lojaEhConfiavel(slug) {
-    const loja = LOJAS_VITRINE[slug];
+    const imagemHtml = produto.imagem
+        ? `<img src="${produto.imagem}" alt="${produto.nome}">`
+        : "";
 
-    if (!loja || !loja.anoEntrada) return false;
+    card.innerHTML = `
+        <span class="card-titulo">${produto.nome}</span>
+        <div class="card-info">${imagemHtml}</div>
+    `;
 
-    const anoAtual = new Date().getFullYear();
-
-    return (anoAtual - loja.anoEntrada) >= 1;
+    return card;
 }
 
-/** @param {Object} produto */
-function temDesconto(produto) {
-    return Boolean(produto.precoOriginal);
+/**
+ * @param {string} slug
+ * @param {any} loja
+ */
+function criarGrupoLoja(slug, loja) {
+    const grupo = document.createElement("div");
+    grupo.className = "grupo-abas";
+    grupo.dataset.loja = slug;
+
+    const titulo = document.createElement("div");
+    titulo.className = "grupo-titulo";
+    titulo.innerHTML = `
+        <img src="${loja.logo || ''}" class="icone-titulo" alt="${loja.nome}">
+        <h2>${loja.nome}</h2>
+    `;
+    titulo.style.cursor = "pointer";
+    titulo.addEventListener("click", (evento) => {
+        evento.stopPropagation();
+        window.location.href = "loja.html?loja=" + slug;
+    });
+
+    const fileira = document.createElement("div");
+    fileira.className = "fileira-abas";
+
+    const produtosMostrados = loja.produtos.slice(0, 4);
+
+    /** @param {any} produto */
+    function adicionarCardNaFileira(produto) {
+        fileira.appendChild(criarCardProdutoHome(produto));
+    }
+
+    produtosMostrados.forEach(adicionarCardNaFileira);
+
+    grupo.appendChild(titulo);
+    grupo.appendChild(fileira);
+
+    return grupo;
 }
 
-/** @param {string} slug */
-function lojaTemPromocao(slug) {
-    const loja = LOJAS_VITRINE[slug];
-
-    if (!loja) return false;
-
-    return loja.produtos.some(temDesconto);
+/**
+ * @param {string} slug
+ * @param {any} loja
+ */
+function criarIconeMenu(slug, loja) {
+    const item = document.createElement("div");
+    item.className = "aplicativo";
+    item.dataset.app = slug;
+    item.innerHTML = `
+        <img src="${loja.logo || ''}" class="icone-aplicativo" alt="${loja.nome}">
+        <span>${loja.nome}</span>
+    `;
+    return item;
 }
 
-/** @param {Object} produto */
-function temFreteGratis(produto) {
-    return produto.freteGratis === true;
-}
+function renderizarLojasParceiras() {
+    const containerAbas = document.querySelector("#abas-lojas");
+    const containerMenu = document.querySelector("#lista-aplicativos-parceiras");
 
-/** @param {string} slug */
-function lojaTemFreteGratis(slug) {
-    const loja = LOJAS_VITRINE[slug];
+    if (!containerAbas || !containerMenu) return;
 
-    if (!loja) return false;
+    containerAbas.innerHTML = "";
+    containerMenu.innerHTML = "";
 
-    return loja.produtos.some(temFreteGratis);
-}
+    const slugs = Object.keys(LOJAS_VITRINE);
 
-/** @param {string} slug */
-function lojaPassaNosFiltros(slug) {
-    if (filtrosAtivos.has("confiavel") && !lojaEhConfiavel(slug)) return false;
-    if (filtrosAtivos.has("promocao") && !lojaTemPromocao(slug)) return false;
-    if (filtrosAtivos.has("frete") && !lojaTemFreteGratis(slug)) return false;
+    if (slugs.length === 0) {
+        containerAbas.innerHTML = `
+            <p class="vitrine-sem-lojas">
+                Ainda não temos lojas parceiras por aqui.
+                Quer ser a primeira? Fale com a gente!
+            </p>
+        `;
+        return;
+    }
 
-    return true;
-}
-
-function aplicarFiltros() {
-    document.querySelectorAll(".grupo-abas").forEach((grupo) => {
-        const slug = grupo.dataset.loja;
-
-        grupo.style.display = lojaPassaNosFiltros(slug) ? "" : "none";
+    slugs.forEach((slug) => {
+        const loja = LOJAS_VITRINE[slug];
+        containerAbas.appendChild(criarGrupoLoja(slug, loja));
+        containerMenu.appendChild(criarIconeMenu(slug, loja));
     });
 }
 
-document.querySelectorAll(".filtro-item").forEach((item) => {
-    item.addEventListener("click", (evento) => {
+function iniciarLojasEFiltros() {
+renderizarLojasParceiras();
+
+    // Clicar numa loja da lista leva pra página daquela loja
+    // (a "vitrine" fica em casa, o resto abre loja.html)
+    document.querySelectorAll(".aplicativo").forEach((item) => {
+        item.addEventListener("click", (evento) => {
+            evento.stopPropagation();
+
+            const loja = item.dataset.app;
+
+            if (loja && loja !== "vitrine") {
+                window.location.href = "loja.html?loja=" + loja;
+            }
+        });
+    });
+
+    // Contador do carrinho no painel de categorias
+    const carrinhoContadorVitrine = document.querySelector("#carrinho-contador-vitrine");
+
+    function atualizarContadorCarrinhoVitrine() {
+        const total = contarItensCarrinho();
+
+        carrinhoContadorVitrine.textContent = total;
+        carrinhoContadorVitrine.classList.toggle("visivel", total > 0);
+    }
+
+    atualizarContadorCarrinhoVitrine();
+
+    document.querySelector("#opcao-carrinho-vitrine").addEventListener("click", (evento) => {
+        evento.stopPropagation();
+        window.location.href = "carrinho.html";
+    });
+
+
+    /* =========================
+       FILTRO DE LOJAS
+
+       "Lojas mais confiáveis" = tem mais de 1 ano na Vitrine
+       "Com promoção" = algum produto com preço original (desconto)
+       "Frete grátis" = algum produto com frete grátis
+    ========================= */
+
+    const filtrosAtivos = new Set();
+
+    /** @param {string} slug */
+    function lojaEhConfiavel(slug) {
+        const loja = LOJAS_VITRINE[slug];
+
+        if (!loja || !loja.anoEntrada) return false;
+
+        const anoAtual = new Date().getFullYear();
+
+        return (anoAtual - loja.anoEntrada) >= 1;
+    }
+
+    /** @param {Object} produto */
+    function temDesconto(produto) {
+        return Boolean(produto.precoOriginal);
+    }
+
+    /** @param {string} slug */
+    function lojaTemPromocao(slug) {
+        const loja = LOJAS_VITRINE[slug];
+
+        if (!loja) return false;
+
+        return loja.produtos.some(temDesconto);
+    }
+
+    /** @param {Object} produto */
+    function temFreteGratis(produto) {
+        return produto.freteGratis === true;
+    }
+
+    /** @param {string} slug */
+    function lojaTemFreteGratis(slug) {
+        const loja = LOJAS_VITRINE[slug];
+
+        if (!loja) return false;
+
+        return loja.produtos.some(temFreteGratis);
+    }
+
+    /** @param {string} slug */
+    function lojaPassaNosFiltros(slug) {
+        if (filtrosAtivos.has("confiavel") && !lojaEhConfiavel(slug)) return false;
+        if (filtrosAtivos.has("promocao") && !lojaTemPromocao(slug)) return false;
+        if (filtrosAtivos.has("frete") && !lojaTemFreteGratis(slug)) return false;
+
+        return true;
+    }
+
+    function aplicarFiltros() {
+        document.querySelectorAll(".grupo-abas").forEach((grupo) => {
+            const slug = grupo.dataset.loja;
+
+            grupo.style.display = lojaPassaNosFiltros(slug) ? "" : "none";
+        });
+    }
+
+    document.querySelectorAll(".filtro-item").forEach((item) => {
+        item.addEventListener("click", (evento) => {
+            evento.stopPropagation();
+
+            const chave = item.dataset.filtro;
+
+            if (filtrosAtivos.has(chave)) {
+                filtrosAtivos.delete(chave);
+                item.classList.remove("ativo");
+            } else {
+                filtrosAtivos.add(chave);
+                item.classList.add("ativo");
+            }
+
+            aplicarFiltros();
+        });
+    });
+
+    document.querySelector("#filtro-limpar").addEventListener("click", (evento) => {
         evento.stopPropagation();
 
-        const chave = item.dataset.filtro;
+        filtrosAtivos.clear();
 
-        if (filtrosAtivos.has(chave)) {
-            filtrosAtivos.delete(chave);
+        document.querySelectorAll(".filtro-item").forEach((item) => {
             item.classList.remove("ativo");
-        } else {
-            filtrosAtivos.add(chave);
-            item.classList.add("ativo");
-        }
+        });
 
         aplicarFiltros();
     });
-});
+}
 
-document.querySelector("#filtro-limpar").addEventListener("click", (evento) => {
-    evento.stopPropagation();
-
-    filtrosAtivos.clear();
-
-    document.querySelectorAll(".filtro-item").forEach((item) => {
-        item.classList.remove("ativo");
-    });
-
-    aplicarFiltros();
-});
+// Espera os dados das lojas parceiras chegarem do Supabase.
+// Se já estiverem prontos (carregamento rápido), inicia na hora.
+if (window.LOJAS_VITRINE) {
+    iniciarLojasEFiltros();
+} else {
+    window.addEventListener("vitrine-dados-prontos", iniciarLojasEFiltros);
+}

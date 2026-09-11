@@ -23,7 +23,7 @@ async function carregarDadosSupabase() {
     };
 
     const [respostaLojas, respostaProdutos] = await Promise.all([
-        fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", { headers }),
+        fetch(SUPABASE_URL + "/rest/v1/lojas?select=*&status=eq.aprovado", { headers }),
         fetch(SUPABASE_URL + "/rest/v1/produtos?select=*", { headers })
     ]);
 
