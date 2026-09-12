@@ -112,7 +112,7 @@ document.querySelector("#form-parceiro").addEventListener("submit", async (event
         botao.textContent = "Enviado!";
     } catch (erro) {
         mostrarStatus(
-            "Não conseguimos enviar agora. Tenta de novo em instantes.",
+            "Erro: " + erro.message,
             "erro"
         );
         botao.disabled = false;
