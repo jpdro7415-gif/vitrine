@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Minha loja - Vitrine</title>
+
+    <link rel="stylesheet" href="loading.css">
+
+    <style>
+        body {
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-y: auto;
+            height: auto;
+            min-height: 100vh;
+        }
+
+        .minhaloja-pagina {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .minhaloja-titulo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .minhaloja-card {
+            background: #262626;
+            border-radius: 18px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .minhaloja-nome {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .minhaloja-status {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .minhaloja-status.pendente {
+            background: rgba(255, 193, 7, 0.15);
+            color: #ffc107;
+        }
+
+        .minhaloja-status.aprovado {
+            background: rgba(126, 217, 87, 0.15);
+            color: #7ed957;
+        }
+
+        .minhaloja-info {
+            margin-top: 16px;
+            font-size: 14px;
+            opacity: 0.8;
+            line-height: 1.6;
+        }
+
+        .minhaloja-sair {
+            margin-top: 24px;
+            display: inline-block;
+            font-size: 14px;
+            color: #ff6b6b;
+            cursor: pointer;
+        }
+
+        .minhaloja-carregando {
+            opacity: 0.7;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Manchas do fundo -->
+    <div class="mancha mancha-1"></div>
+    <div class="mancha mancha-2"></div>
+    <div class="mancha mancha-3"></div>
+    <div class="mancha mancha-4"></div>
+
+    <div class="minhaloja-pagina">
+        <div class="minhaloja-titulo">Minha loja</div>
+
+        <div id="conteudo-minha-loja">
+            <p class="minhaloja-carregando">Carregando...</p>
+        </div>
+
+        <div class="minhaloja-sair" id="botao-sair">Sair da conta</div>
+    </div>
+
+    <!-- Navegação entre a Vitrine e o cadastro de parceiro -->
+    <div class="nav-vitrine">
+        <a href="index.html" class="nav-vitrine-item">Início</a>
+        <a href="parceiros.html" class="nav-vitrine-item">Parceiro</a>
+        <a href="minha-loja.html" class="nav-vitrine-item nav-vitrine-ativo">Minha loja</a>
+    </div>
+
+    <script src="minha-loja.js"></script>
+</body>
+
+</html>
