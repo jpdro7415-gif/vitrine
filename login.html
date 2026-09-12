@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Entrar - Vitrine</title>
+
+    <link rel="stylesheet" href="loading.css">
+
+    <style>
+        body {
+            justify-content: flex-start;
+            align-items: flex-start;
+            overflow-y: auto;
+            height: auto;
+            min-height: 100vh;
+        }
+
+        .login-pagina {
+            width: 100%;
+            max-width: 460px;
+            margin: 0 auto;
+            padding: 40px 24px 100px;
+            color: white;
+            position: relative;
+            z-index: 2;
+        }
+
+        .login-titulo {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .login-subtitulo {
+            font-size: 15px;
+            opacity: 0.75;
+            line-height: 1.5;
+            margin-bottom: 32px;
+        }
+
+        .login-campo {
+            margin-bottom: 20px;
+        }
+
+        .login-campo label {
+            display: block;
+            font-size: 14px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        .login-campo input {
+            width: 100%;
+            padding: 14px 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            background: #262626;
+            color: white;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .login-campo input:focus {
+            outline: none;
+            border-color: #ff7043;
+        }
+
+        .login-botao {
+            width: 100%;
+            padding: 16px;
+            margin-top: 8px;
+
+            border: none;
+            border-radius: 14px;
+
+            background: #ff7043;
+            color: #1a1a1a;
+
+            font-size: 16px;
+            font-weight: 700;
+            font-family: inherit;
+
+            cursor: pointer;
+        }
+
+        .login-botao:disabled {
+            opacity: 0.6;
+        }
+
+        .login-status {
+            margin-top: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+            display: none;
+        }
+
+        .login-status.mostrar {
+            display: block;
+        }
+
+        .login-status.sucesso {
+            color: #7ed957;
+        }
+
+        .login-status.erro {
+            color: #ff6b6b;
+        }
+
+        .login-rodape {
+            margin-top: 24px;
+            font-size: 14px;
+            opacity: 0.75;
+        }
+
+        .login-rodape a {
+            color: #ff7043;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Manchas do fundo -->
+    <div class="mancha mancha-1"></div>
+    <div class="mancha mancha-2"></div>
+    <div class="mancha mancha-3"></div>
+    <div class="mancha mancha-4"></div>
+
+    <div class="login-pagina">
+        <div class="login-titulo">Entrar como parceiro</div>
+        <div class="login-subtitulo">
+            Entre com o e-mail e a senha que você usou no cadastro
+            pra gerenciar sua loja.
+        </div>
+
+        <form id="form-login">
+            <div class="login-campo">
+                <label for="campo-email">E-mail</label>
+                <input type="email" id="campo-email" required>
+            </div>
+
+            <div class="login-campo">
+                <label for="campo-senha">Senha</label>
+                <input type="password" id="campo-senha" required>
+            </div>
+
+            <button type="submit" class="login-botao" id="botao-entrar">
+                Entrar
+            </button>
+
+            <div class="login-status" id="status-login"></div>
+        </form>
+
+        <div class="login-rodape">
+            Ainda não tem loja cadastrada?
+            <a href="parceiros.html">Cadastre-se aqui</a>.
+        </div>
+    </div>
+
+    <!-- Navegação entre a Vitrine e o cadastro de parceiro -->
+    <div class="nav-vitrine">
+        <a href="index.html" class="nav-vitrine-item">Início</a>
+        <a href="parceiros.html" class="nav-vitrine-item">Parceiro</a>
+        <a href="login.html" class="nav-vitrine-item nav-vitrine-ativo">Minha loja</a>
+    </div>
+
+    <script src="login.js"></script>
+</body>
+
+</html>

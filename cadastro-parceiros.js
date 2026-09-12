@@ -33,45 +33,79 @@ document.querySelector("#form-parceiro").addEventListener("submit", async (event
 
     const botao = document.querySelector("#botao-enviar");
     const nome = document.querySelector("#campo-nome").value.trim();
+    const email = document.querySelector("#campo-email").value.trim();
+    const senha = document.querySelector("#campo-senha").value;
     const contato = document.querySelector("#campo-contato").value.trim();
     const cor = document.querySelector("#campo-cor").value;
     const mensagem = document.querySelector("#campo-mensagem").value.trim();
 
-    if (!nome || !contato) return;
+    if (!nome || !email || !senha || !contato) return;
 
     botao.disabled = true;
     botao.textContent = "Enviando...";
 
-    const corpo = {
-        slug: gerarSlug(nome) + "-" + Date.now().toString().slice(-5),
-        nome: nome,
-        contato: contato,
-        cor_principal: cor,
-        ano_entrada: new Date().getFullYear()
-    };
-
-    if (mensagem) {
-        corpo.mensagem_cadastro = mensagem;
-    }
-
     try {
-        const resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas", {
+        // Passo 1: cria a conta de login do lojista
+        const respostaConta = await fetch(SUPABASE_URL + "/auth/v1/signup", {
             method: "POST",
             headers: {
                 apikey: SUPABASE_ANON_KEY,
-                Authorization: "Bearer " + SUPABASE_ANON_KEY,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ email: email, password: senha })
+        });
+
+        const dadosConta = await respostaConta.json();
+
+        if (!respostaConta.ok) {
+            throw new Error(dadosConta.msg || "Falha ao criar a conta");
+        }
+
+        const tokenAcesso = dadosConta.access_token;
+        const usuarioId = dadosConta.user ? dadosConta.user.id : null;
+
+        if (!tokenAcesso || !usuarioId) {
+            // Alguns projetos exigem confirmar o e-mail antes de liberar o acesso
+            mostrarStatus(
+                "Conta criada! Confirme seu e-mail (a gente te mandou um link) e depois faça login em Minha loja pra continuar o cadastro.",
+                "sucesso"
+            );
+            document.querySelector("#form-parceiro").reset();
+            botao.textContent = "Enviado!";
+            return;
+        }
+
+        // Passo 2: cria a loja, já ligada a essa conta
+        const corpo = {
+            slug: gerarSlug(nome) + "-" + Date.now().toString().slice(-5),
+            nome: nome,
+            contato: contato,
+            cor_principal: cor,
+            ano_entrada: new Date().getFullYear(),
+            user_id: usuarioId
+        };
+
+        if (mensagem) {
+            corpo.mensagem_cadastro = mensagem;
+        }
+
+        const respostaLoja = await fetch(SUPABASE_URL + "/rest/v1/lojas", {
+            method: "POST",
+            headers: {
+                apikey: SUPABASE_ANON_KEY,
+                Authorization: "Bearer " + tokenAcesso,
                 "Content-Type": "application/json",
                 Prefer: "return=minimal"
             },
             body: JSON.stringify(corpo)
         });
 
-        if (!resposta.ok) {
-            throw new Error("Falha no envio");
+        if (!respostaLoja.ok) {
+            throw new Error("Falha ao criar a loja");
         }
 
         mostrarStatus(
-            "Recebemos seu cadastro! Assim que a gente aprovar, sua loja aparece na Vitrine.",
+            "Recebemos seu cadastro! Assim que a gente aprovar, sua loja aparece na Vitrine. Você já pode entrar em \"Minha loja\" com seu e-mail e senha.",
             "sucesso"
         );
         document.querySelector("#form-parceiro").reset();
