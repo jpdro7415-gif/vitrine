@@ -55,10 +55,40 @@ document.querySelector("#form-parceiro").addEventListener("submit", async (event
             body: JSON.stringify({ email: email, password: senha })
         });
 
-        const dadosConta = await respostaConta.json();
+        let dadosConta = await respostaConta.json();
 
         if (!respostaConta.ok) {
-            throw new Error(dadosConta.msg || "Falha ao criar a conta");
+            const jaExiste =
+                (dadosConta.msg || dadosConta.error_description || "")
+                    .toLowerCase()
+                    .includes("already registered") ||
+                (dadosConta.msg || "").toLowerCase().includes("already exists");
+
+            if (!jaExiste) {
+                throw new Error(dadosConta.msg || "Falha ao criar a conta");
+            }
+
+            // Conta já existe (provavelmente de uma tentativa anterior
+            // que não completou) -- tenta entrar com a senha informada
+            const respostaLogin = await fetch(
+                SUPABASE_URL + "/auth/v1/token?grant_type=password",
+                {
+                    method: "POST",
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ email: email, password: senha })
+                }
+            );
+
+            dadosConta = await respostaLogin.json();
+
+            if (!respostaLogin.ok) {
+                throw new Error(
+                    "Esse e-mail já tem uma conta com outra senha. Tenta entrar em \"Minha loja\", ou use outro e-mail."
+                );
+            }
         }
 
         const tokenAcesso = dadosConta.access_token;
@@ -112,7 +142,9 @@ document.querySelector("#form-parceiro").addEventListener("submit", async (event
         botao.textContent = "Enviado!";
     } catch (erro) {
         mostrarStatus(
-            "Erro: " + erro.message,
+            erro.message && erro.message.includes("Esse e-mail")
+                ? erro.message
+                : "Não conseguimos enviar agora. Tenta de novo em instantes.",
             "erro"
         );
         botao.disabled = false;
