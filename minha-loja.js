@@ -62,9 +62,122 @@ async function carregarMinhaLoja() {
                 </div>
             </div>
         `;
+
+        // Libera a seção de produtos agora que sabemos o id da loja
+        document.querySelector("#secao-produtos").style.display = "block";
+        carregarProdutos(loja.id, token);
+        prepararFormularioProduto(loja.id, token);
     } catch (erro) {
         conteudo.innerHTML = `<p>Não conseguimos carregar sua loja agora. Tenta de novo em instantes.</p>`;
     }
+}
+
+/**
+ * @typedef {Object} ProdutoLoja
+ * @property {string} nome
+ * @property {number} preco
+ * @property {number} estoque
+ * @property {boolean} permite_busca_automatica
+ */
+
+/**
+ * Monta o HTML de um item de produto na lista.
+ * @param {ProdutoLoja} produto
+ * @returns {string}
+ */
+function montarItemProduto(produto) {
+    return `
+        <div class="produto-item">
+            <div class="produto-item-nome">${produto.nome}</div>
+            <div class="produto-item-info">
+                R$ ${Number(produto.preco).toFixed(2)} · Estoque: ${produto.estoque}<br>
+                ${produto.permite_busca_automatica ? "🤖 Robô autorizado a atualizar preço" : "Atualização manual"}
+            </div>
+        </div>
+    `;
+}
+
+/**
+ * Busca e lista os produtos da loja logada.
+ * @param {string} lojaId
+ * @param {string} token
+ */
+async function carregarProdutos(lojaId, token) {
+    const lista = document.querySelector("#lista-produtos");
+    lista.innerHTML = `<p class="minhaloja-carregando">Carregando produtos...</p>`;
+
+    try {
+        const resposta = await fetch(
+            SUPABASE_URL + "/rest/v1/produtos?loja_id=eq." + lojaId + "&select=*",
+            {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: "Bearer " + token
+                }
+            }
+        );
+
+        /** @type {ProdutoLoja[]} */
+        const produtos = await resposta.json();
+
+        if (!produtos || produtos.length === 0) {
+            lista.innerHTML = `<p class="minhaloja-carregando">Você ainda não cadastrou nenhum produto.</p>`;
+            return;
+        }
+
+        lista.innerHTML = produtos.map(montarItemProduto).join("");
+    } catch (erro) {
+        lista.innerHTML = `<p class="minhaloja-carregando">Não foi possível carregar os produtos agora.</p>`;
+    }
+}
+
+/**
+ * Prepara o envio do formulário de novo produto.
+ * @param {string} lojaId
+ * @param {string} token
+ */
+function prepararFormularioProduto(lojaId, token) {
+    const form = document.querySelector("#form-produto");
+    const mensagem = document.querySelector("#form-produto-mensagem");
+
+    form.addEventListener("submit", async (evento) => {
+        evento.preventDefault();
+        mensagem.textContent = "Salvando...";
+
+        const novoProduto = {
+            loja_id: lojaId,
+            nome: document.querySelector("#produto-nome").value.trim(),
+            preco: Number(document.querySelector("#produto-preco").value),
+            estoque: Number(document.querySelector("#produto-estoque").value),
+            imagem: document.querySelector("#produto-imagem").value.trim(),
+            link_produto: document.querySelector("#produto-link").value.trim() || null,
+            permite_busca_automatica: document.querySelector("#produto-permite-busca").checked
+        };
+
+        try {
+            const resposta = await fetch(SUPABASE_URL + "/rest/v1/produtos", {
+                method: "POST",
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                    Prefer: "return=minimal"
+                },
+                body: JSON.stringify(novoProduto)
+            });
+
+            if (!resposta.ok) {
+                mensagem.textContent = "Não conseguimos salvar o produto. Confira os dados e tente de novo.";
+                return;
+            }
+
+            mensagem.textContent = "Produto adicionado!";
+            form.reset();
+            carregarProdutos(lojaId, token);
+        } catch (erro) {
+            mensagem.textContent = "Erro de conexão. Tenta de novo em instantes.";
+        }
+    });
 }
 
 document.querySelector("#botao-sair").addEventListener("click", () => {

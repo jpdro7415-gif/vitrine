@@ -83,6 +83,84 @@
         .minhaloja-carregando {
             opacity: 0.7;
         }
+
+        .minhaloja-subtitulo {
+            font-size: 18px;
+            font-weight: 700;
+            margin: 32px 0 16px;
+        }
+
+        .produto-item {
+            background: #262626;
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 12px;
+        }
+
+        .produto-item-nome {
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .produto-item-info {
+            font-size: 13px;
+            opacity: 0.75;
+        }
+
+        .form-produto label {
+            display: block;
+            font-size: 13px;
+            opacity: 0.8;
+            margin: 12px 0 6px;
+        }
+
+        .form-produto input[type="text"],
+        .form-produto input[type="number"],
+        .form-produto input[type="url"],
+        .form-produto textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #3a3a3a;
+            background: #1a1a1a;
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-produto-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-top: 16px;
+        }
+
+        .form-produto-checkbox input {
+            margin-top: 3px;
+        }
+
+        .form-produto-checkbox span {
+            font-size: 13px;
+            opacity: 0.85;
+            line-height: 1.4;
+        }
+
+        .form-produto-botao {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: var(--cor-principal, #ff7043);
+            color: #1a1a1a;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .form-produto-mensagem {
+            margin-top: 12px;
+            font-size: 13px;
+        }
     </style>
 </head>
 
@@ -99,6 +177,37 @@
 
         <div id="conteudo-minha-loja">
             <p class="minhaloja-carregando">Carregando...</p>
+        </div>
+
+        <div id="secao-produtos" style="display: none;">
+            <div class="minhaloja-subtitulo">Meus produtos</div>
+            <div id="lista-produtos"></div>
+
+            <div class="minhaloja-subtitulo">Adicionar produto</div>
+            <form class="form-produto" id="form-produto">
+                <label for="produto-nome">Nome do produto</label>
+                <input type="text" id="produto-nome" required>
+
+                <label for="produto-preco">Preço (ex: 49.90)</label>
+                <input type="number" id="produto-preco" step="0.01" min="0" required>
+
+                <label for="produto-estoque">Estoque</label>
+                <input type="number" id="produto-estoque" min="0" required>
+
+                <label for="produto-imagem">Link da imagem</label>
+                <input type="url" id="produto-imagem" required>
+
+                <label for="produto-link">Link do produto na sua loja</label>
+                <input type="url" id="produto-link" placeholder="https://...">
+
+                <div class="form-produto-checkbox">
+                    <input type="checkbox" id="produto-permite-busca">
+                    <span>Autorizo a Vitrine a visitar esse link automaticamente para manter o preço e o estoque atualizados.</span>
+                </div>
+
+                <button type="submit" class="form-produto-botao">Adicionar produto</button>
+                <div class="form-produto-mensagem" id="form-produto-mensagem"></div>
+            </form>
         </div>
 
         <div class="minhaloja-sair" id="botao-sair">Sair da conta</div>
