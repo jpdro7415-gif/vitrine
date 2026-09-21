@@ -12,7 +12,7 @@ body {
     width: 100%;
     min-height: 100vh;
 
-    background: #1a1a1a;
+    background: #ffffff;
 
     font-family: sans-serif;
 
@@ -36,14 +36,14 @@ body {
 
     padding: 0 10px;
 
-    background: #1a1a1a;
+    background: #ffffff;
 
     z-index: 10;
 }
 
 .botao-voltar-produto {
     font-size: 26px;
-    color: white;
+    color: #1a1a1a;
 
     background: none;
     border: none;
@@ -68,7 +68,7 @@ body {
 
     object-fit: cover;
 
-    background: #262626;
+    background: #f0f0f0;
 
     display: block;
 }
@@ -89,7 +89,7 @@ body {
     border-radius: 10px;
     object-fit: cover;
 
-    background: #262626;
+    background: #f0f0f0;
 
     flex-shrink: 0;
 
@@ -134,18 +134,18 @@ body {
 }
 
 .produto-loja-texto {
-    color: rgba(255, 255, 255, 0.85);
+    color: rgba(0, 0, 0, 0.85);
     font-size: 14px;
     font-weight: bold;
 }
 
 .produto-loja-seta {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(0, 0, 0, 0.4);
     font-size: 18px;
 }
 
 .produto-nome-grande {
-    color: white;
+    color: #1a1a1a;
     font-size: 22px;
     font-weight: normal;
 
@@ -159,7 +159,7 @@ body {
 
     margin-bottom: 16px;
 
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.7);
     font-size: 14px;
 }
 
@@ -171,14 +171,14 @@ body {
 .produto-vendidos-estoque {
     margin-bottom: 16px;
 
-    color: rgba(255, 255, 255, 0.55);
+    color: rgba(0, 0, 0, 0.55);
     font-size: 13px;
 }
 
 .produto-parcelamento {
     margin-bottom: 12px;
 
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.7);
     font-size: 14px;
 }
 
@@ -191,7 +191,7 @@ body {
 }
 
 .produto-preco-original {
-    color: rgba(255, 255, 255, 0.4);
+    color: rgba(0, 0, 0, 0.4);
     font-size: 16px;
 
     text-decoration: line-through;
@@ -215,11 +215,11 @@ body {
 }
 
 .produto-frete.pago {
-    color: rgba(255, 255, 255, 0.6);
+    color: rgba(0, 0, 0, 0.6);
 }
 
 .produto-secao-titulo {
-    color: white;
+    color: #1a1a1a;
     font-size: 16px;
     font-weight: bold;
 
@@ -227,11 +227,11 @@ body {
 
     padding-top: 14px;
 
-    border-top: 1px solid #2a2a2a;
+    border-top: 1px solid #e6e6e6;
 }
 
 .produto-descricao {
-    color: rgba(255, 255, 255, 0.7);
+    color: rgba(0, 0, 0, 0.7);
     font-size: 15px;
     line-height: 1.5;
 }
@@ -255,8 +255,9 @@ body {
 
     box-sizing: border-box;
 
-    background: #262626;
-    border-top: 1px solid #333333;
+    background: #ffffff;
+    border-top: 1px solid #e6e6e6;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
 }
 
 .botao-ir-loja {
@@ -286,7 +287,7 @@ body {
 
     background: var(--cor-principal);
 
-    color: white;
+    color: #ffffff;
     font-size: 15px;
     font-weight: bold;
 

@@ -132,6 +132,12 @@ async function carregarProdutos(lojaId, token) {
 }
 
 /**
+ * URL da Edge Function que busca e atualiza os dados do produto.
+ * Precisa bater com o projeto Supabase da Vitrine.
+ */
+const URL_ROBO_ATUALIZAR = SUPABASE_URL + "/functions/v1/atualizar-precos";
+
+/**
  * Prepara o envio do formulário de novo produto.
  * @param {string} lojaId
  * @param {string} token
@@ -142,16 +148,16 @@ function prepararFormularioProduto(lojaId, token) {
 
     form.addEventListener("submit", async (evento) => {
         evento.preventDefault();
-        mensagem.textContent = "Salvando...";
+        mensagem.textContent = "Salvando link do produto...";
 
         const novoProduto = {
             loja_id: lojaId,
-            nome: document.querySelector("#produto-nome").value.trim(),
-            preco: Number(document.querySelector("#produto-preco").value),
-            estoque: Number(document.querySelector("#produto-estoque").value),
-            imagem: document.querySelector("#produto-imagem").value.trim(),
-            link_produto: document.querySelector("#produto-link").value.trim() || null,
-            permite_busca_automatica: document.querySelector("#produto-permite-busca").checked
+            nome: "Carregando...",
+            preco: 0,
+            estoque: 0,
+            parcelas: Number(document.querySelector("#produto-parcelas").value) || 1,
+            link_produto: document.querySelector("#produto-link").value.trim(),
+            permite_busca_automatica: true
         };
 
         try {
@@ -167,15 +173,28 @@ function prepararFormularioProduto(lojaId, token) {
             });
 
             if (!resposta.ok) {
-                mensagem.textContent = "Não conseguimos salvar o produto. Confira os dados e tente de novo.";
+                mensagem.textContent = "Nao conseguimos salvar o produto. Confira o link e tente de novo.";
                 return;
             }
 
-            mensagem.textContent = "Produto adicionado!";
+            mensagem.textContent = "Link salvo! Buscando dados do produto na sua loja...";
             form.reset();
+            document.querySelector("#produto-parcelas").value = 1;
+
+            // Aciona o robo agora mesmo, sem esperar a proxima rodada programada.
+            try {
+                await fetch(URL_ROBO_ATUALIZAR, {
+                    method: "POST",
+                    headers: { Authorization: "Bearer " + SUPABASE_ANON_KEY }
+                });
+            } catch (erroRobo) {
+                // Se o robo falhar agora, a proxima rodada programada ainda pega esse produto.
+            }
+
+            mensagem.textContent = "Produto adicionado!";
             carregarProdutos(lojaId, token);
         } catch (erro) {
-            mensagem.textContent = "Erro de conexão. Tenta de novo em instantes.";
+            mensagem.textContent = "Erro de conexao. Tenta de novo em instantes.";
         }
     });
 }

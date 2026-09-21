@@ -202,8 +202,8 @@ function criarCardProdutoHome(produto) {
         : "";
 
     card.innerHTML = `
-        <span class="card-titulo">${produto.nome}</span>
         <div class="card-info">${imagemHtml}</div>
+        <span class="card-titulo">${produto.nome}</span>
     `;
 
     return card;
@@ -233,7 +233,9 @@ function criarGrupoLoja(slug, loja) {
     const fileira = document.createElement("div");
     fileira.className = "fileira-abas";
 
-    const produtosMostrados = loja.produtos.slice(0, 4);
+    const produtosMostrados = loja.produtos.filter(
+        (produto) => produto.nome && produto.nome.toLowerCase().includes("camisa")
+    );
 
     /** @param {any} produto */
     function adicionarCardNaFileira(produto) {

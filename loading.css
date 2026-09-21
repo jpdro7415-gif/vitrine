@@ -21,7 +21,7 @@ body {
     justify-content: center;
     align-items: center;
 
-    background: #333333;
+    background: #ffffff;
 
     overflow: hidden;
 
@@ -45,7 +45,7 @@ body {
     top: -10%;
     left: -10%;
 
-    background: #4a4a4a;
+    background: #dbe7ff;
 
     border-radius: 40% 60% 65% 35% / 45% 40% 60% 55%;
 
@@ -59,7 +59,7 @@ body {
     top: 30%;
     left: 55%;
 
-    background: #2e2e2e;
+    background: #c9dbff;
 
     border-radius: 60% 40% 30% 70% / 55% 65% 35% 45%;
 
@@ -74,7 +74,7 @@ body {
     top: 55%;
     left: -5%;
 
-    background: #3a3a3a;
+    background: #e4edff;
 
     border-radius: 50% 50% 40% 60% / 60% 45% 55% 40%;
 
@@ -89,7 +89,7 @@ body {
     top: -5%;
     left: 60%;
 
-    background: #262626;
+    background: #cfe0ff;
 
     border-radius: 35% 65% 55% 45% / 40% 60% 40% 60%;
 
@@ -224,7 +224,7 @@ body {
     display: flex;
     align-items: center;
 
-    color: white;
+    color: #1a1a1a;
     z-index: 5;
 }
 
@@ -234,7 +234,7 @@ body {
 .lupa {
     font-size: 34px;
 
-    color: white;
+    color: #1a1a1a;
 
     transition: color 0.3s ease;
 }
@@ -253,7 +253,7 @@ body {
 }
 
 .campo-pesquisa-texto {
-    color: white;
+    color: #1a1a1a;
     opacity: 0.7;
 
     font-size: 18px;
@@ -277,7 +277,7 @@ body {
     width: 100%;
     height: 100%;
 
-    background: #121212;
+    background: #ffffff;
 
     z-index: 2000;
 }
@@ -297,12 +297,12 @@ body {
 
     gap: 12px;
 
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #e6e6e6;
 }
 
 .botao-voltar-pesquisa {
     font-size: 26px;
-    color: white;
+    color: #1a1a1a;
 
     background: none;
     border: none;
@@ -320,14 +320,14 @@ body {
 
     background: transparent;
 
-    color: white;
+    color: #1a1a1a;
     font-size: 19px;
 
     font-family: inherit;
 }
 
 .campo-pesquisa-tela::placeholder {
-    color: white;
+    color: #1a1a1a;
     opacity: 0.5;
 }
 
@@ -341,7 +341,7 @@ body {
 }
 
 .secao-recentes h3 {
-    color: white;
+    color: #1a1a1a;
     font-size: 16px;
     opacity: 0.6;
 
@@ -363,7 +363,7 @@ body {
 
     cursor: pointer;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .icone-recente {
@@ -376,7 +376,7 @@ body {
 .texto-recente {
     flex: 1;
 
-    color: white;
+    color: #1a1a1a;
     font-size: 17px;
 }
 
@@ -392,7 +392,7 @@ body {
     border-radius: 50%;
     background: transparent;
 
-    color: white;
+    color: #1a1a1a;
     opacity: 0.5;
     font-size: 16px;
 
@@ -401,7 +401,7 @@ body {
 
 .remover-recente:active {
     opacity: 1;
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.1);
 }
 
 
@@ -414,7 +414,7 @@ body {
 }
 
 .secao-populares h3 {
-    color: white;
+    color: #1a1a1a;
     font-size: 16px;
     opacity: 0.6;
 
@@ -436,13 +436,13 @@ body {
 
     cursor: pointer;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 .numero-popular {
     width: 20px;
 
-    color: #ff7043;
+    color: #3355b3;
     font-size: 16px;
     font-weight: bold;
 
@@ -452,7 +452,7 @@ body {
 .texto-popular {
     flex: 1;
 
-    color: white;
+    color: #1a1a1a;
     font-size: 17px;
 }
 
@@ -468,9 +468,9 @@ body {
     left: 0;
 
     width: 100%;
-    height: 1px;
+    height: 3px;
 
-    background: #808080;
+    background: #a8d1ff;
 
     z-index: 3;
 }
@@ -513,10 +513,11 @@ body {
 
     border-radius: 20px;
 
-    background: #333333;
+    background: #1a33e6;
 
-    color: white;
+    color: #ffffff;
     font-size: 15px;
+    font-weight: 700;
 
     cursor: pointer;
 }
@@ -535,7 +536,7 @@ body {
     width: 65vw;
     height: calc(100vh - 70px);
 
-    background: rgba(51, 51, 51, 0.5);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
@@ -551,7 +552,7 @@ body {
 }
 
 .menu-aplicativos h2 {
-    color: white;
+    color: #1a1a1a;
 
     font-size: 22px;
 
@@ -576,10 +577,10 @@ body {
 
     border-radius: 12px;
 
-    background: #3d4046;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: #f4f4f6;
+    border: 1px solid rgba(0, 0, 0, 0.06);
 
-    color: white;
+    color: #1a1a1a;
 
     font-size: 17px;
 
@@ -611,14 +612,14 @@ body {
 
                                               .menu-pontinhos {
     font-size: 28px;
-    color: white;
+    color: #1a1a1a;
     margin-left: auto;
     margin-right: 10px;
     cursor: pointer;
     line-height: 1;
 }                                             .menu-pontinhos {
     font-size: 28px;
-    color: white;
+    color: #1a1a1a;
     margin-left: auto;
     margin-right: 10px;
 
@@ -643,11 +644,11 @@ body {
 
     box-sizing: border-box;
 
-    background: rgba(51, 51, 51, 0.5);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.12);
 
     z-index: 1000;
 }
@@ -675,11 +676,11 @@ body {
 
     box-sizing: border-box;
 
-    background: rgba(51, 51, 51, 0.5);
+    background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 
-    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.4);
+    box-shadow: -5px 0 20px rgba(0, 0, 0, 0.12);
 
     z-index: 1000;
 }
@@ -691,23 +692,23 @@ body {
 .filtro-item {
     padding: 14px 4px;
 
-    color: white;
+    color: #1a1a1a;
     font-size: 16px;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 
     cursor: pointer;
 }
 
 .filtro-item.ativo {
-    color: #ff7043;
+    color: #3355b3;
     font-weight: bold;
 }
 
 .filtro-limpar {
     margin-top: 16px;
 
-    color: rgba(255, 255, 255, 0.5);
+    color: rgba(0, 0, 0, 0.5);
     font-size: 14px;
 
     text-align: center;
@@ -721,10 +722,10 @@ body {
     display: flex;
     align-items: center;
 
-    color: white;
+    color: #1a1a1a;
     font-size: 17px;
 
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 
     cursor: pointer;
 }
@@ -756,7 +757,7 @@ body {
 
     background: #e63946;
 
-    color: white;
+    color: #ffffff;
     font-size: 11px;
     font-weight: bold;
 }
@@ -779,8 +780,10 @@ body {
 
     z-index: 1;
 
-    display: flex;
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    padding-bottom: 110px;
 }
 
 .fileira-abas {
@@ -807,18 +810,37 @@ body {
     cursor: pointer;
 
     border-radius: 16px;
-    background: #333333;
+    background: #ffffff;
+    border: 1px solid #ececec;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .card-titulo {
-    color: white;
-    font-size: 22px;
+    margin-top: 8px;
+
+    color: #1a1a1a;
+    font-size: 15px;
+    font-weight: 600;
     text-align: center;
 }
 
 .card-info {
     width: 100%;
-    height: 70px;
+
+    border-radius: 10px;
+    overflow: hidden;
+
+    background: #f0f0f0;
+}
+
+.card-info img {
+    width: 100%;
+    height: auto;
+
+    display: block;
+    object-fit: contain;
+
+    display: block;
 }                                             .grupo-abas {
     width: 100%;
     flex: 0 0 auto;
@@ -826,7 +848,7 @@ body {
     display: flex;
     flex-direction: column;
 
-    margin-bottom: 110px;
+    margin-bottom: 20px;
 
     position: relative;
     z-index: 1;
@@ -850,7 +872,7 @@ body {
 }
 
 .grupo-abas h2 {
-    color: white;
+    color: #1a1a1a;
     font-size: 20px;
     text-align: left;
 }
@@ -871,8 +893,9 @@ body {
 
     padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
 
-    background: #1c1c1c;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: #ffffff;
+    border-top: 1px solid rgba(0, 0, 0, 0.08);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.04);
 
     z-index: 200;
 
@@ -882,24 +905,31 @@ body {
 .nav-vitrine-item {
     flex: 1;
 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+
     text-align: center;
     text-decoration: none;
     white-space: nowrap;
 
-    padding: 12px 4px;
+    padding: 6px 4px;
 
-    border-radius: 16px;
+    color: rgba(0, 0, 0, 0.55);
 
-    background: rgba(255, 255, 255, 0.06);
-    color: rgba(255, 255, 255, 0.65);
-
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 600;
 
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: color 0.2s ease;
+}
+
+.nav-vitrine-item svg {
+    width: 22px;
+    height: 22px;
 }
 
 .nav-vitrine-ativo {
-    background: #ff7043;
-    color: #1a1a1a;
+    color: #3355b3;
 }

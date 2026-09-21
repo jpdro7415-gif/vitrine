@@ -161,6 +161,13 @@
             margin-top: 12px;
             font-size: 13px;
         }
+
+        .form-produto-info {
+            font-size: 13px;
+            opacity: 0.75;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
     </style>
 </head>
 
@@ -184,26 +191,13 @@
             <div id="lista-produtos"></div>
 
             <div class="minhaloja-subtitulo">Adicionar produto</div>
+            <p class="form-produto-info">Cole o link do produto na sua loja — nome, preço, estoque, imagem e descrição são preenchidos automaticamente pelo robô, direto da sua página.</p>
             <form class="form-produto" id="form-produto">
-                <label for="produto-nome">Nome do produto</label>
-                <input type="text" id="produto-nome" required>
-
-                <label for="produto-preco">Preço (ex: 49.90)</label>
-                <input type="number" id="produto-preco" step="0.01" min="0" required>
-
-                <label for="produto-estoque">Estoque</label>
-                <input type="number" id="produto-estoque" min="0" required>
-
-                <label for="produto-imagem">Link da imagem</label>
-                <input type="url" id="produto-imagem" required>
-
                 <label for="produto-link">Link do produto na sua loja</label>
-                <input type="url" id="produto-link" placeholder="https://...">
+                <input type="url" id="produto-link" placeholder="https://..." required>
 
-                <div class="form-produto-checkbox">
-                    <input type="checkbox" id="produto-permite-busca">
-                    <span>Autorizo a Vitrine a visitar esse link automaticamente para manter o preço e o estoque atualizados.</span>
-                </div>
+                <label for="produto-parcelas">Em quantas parcelas sem juros? (ex: 3)</label>
+                <input type="number" id="produto-parcelas" min="1" max="24" value="1">
 
                 <button type="submit" class="form-produto-botao">Adicionar produto</button>
                 <div class="form-produto-mensagem" id="form-produto-mensagem"></div>
