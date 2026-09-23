@@ -192,6 +192,99 @@ document.querySelectorAll(".item-popular").forEach((item) => {
    Supabase, em vez de ficar fixo no HTML)
 ========================= */
 
+/**
+ * Converte um preço já formatado ("R$ 29,90") de volta pra
+ * número (29.9), pra poder calcular o valor da parcela.
+ * Aceita também um número puro, se algum dia vier assim.
+ * @param {string | number | null | undefined} precoFormatado
+ * @returns {number | null}
+ */
+function paraNumero(precoFormatado) {
+    if (typeof precoFormatado === "number") return precoFormatado;
+    if (!precoFormatado) return null;
+
+    const limpo = precoFormatado.replace("R$", "").trim().replace(".", "").replace(",", ".");
+    const numero = Number(limpo);
+
+    return Number.isFinite(numero) ? numero : null;
+}
+
+/**
+ * Formata um número puro como preço em reais — usado só
+ * internamente pro cálculo de parcelas, já que o preço
+ * principal do produto já vem formatado do supabase-dados.js.
+ * @param {number} valor
+ * @returns {string}
+ */
+function formatarPrecoHome(valor) {
+    return Number(valor).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+}
+
+/** @param {any} produto */
+function criarInfoProdutoHome(produto) {
+    const info = document.createElement("div");
+    info.className = "info-produto-home";
+
+    let precoOriginalHtml = "";
+    const precoOriginalNumero = paraNumero(produto.precoOriginal);
+    const precoAtualNumero = paraNumero(produto.preco);
+
+    if (precoOriginalNumero !== null && precoAtualNumero !== null && precoOriginalNumero > precoAtualNumero) {
+        precoOriginalHtml = `<span class="preco-original-home">${produto.precoOriginal}</span>`;
+    }
+
+    let parcelasHtml = "";
+    if (produto.parcelas && produto.parcelas > 1 && precoAtualNumero !== null) {
+        const valorParcela = precoAtualNumero / produto.parcelas;
+        parcelasHtml = `<div class="parcelas-home">${produto.parcelas}x de ${formatarPrecoHome(valorParcela)} sem juros</div>`;
+    }
+
+    let freteHtml = "";
+    if (produto.freteGratis) {
+        freteHtml = `<div class="frete-gratis-home">Frete grátis</div>`;
+    }
+
+    info.innerHTML = `
+        <div class="preco-linha-home">
+            ${precoOriginalHtml}
+            <span class="preco-atual-home">${produto.preco ?? ""}</span>
+        </div>
+        ${parcelasHtml}
+        ${freteHtml}
+    `;
+
+    return info;
+}
+
+/**
+ * Gera uma versão curta ("seca") do nome do produto, cortando
+ * antes da primeira palavra de ligação (em, de, com, para, sem...)
+ * ou de um traço — mantendo só o núcleo do nome.
+ * @param {string} nomeCompleto
+ * @returns {string}
+ */
+function nomeSecoProduto(nomeCompleto) {
+    if (!nomeCompleto) return nomeCompleto;
+
+    // Corta primeiro em separadores fortes (traço, dois pontos)
+    const base = nomeCompleto.split(/\s+-\s+|:/)[0].trim();
+
+    const conectores = ["em", "de", "com", "para", "sem", "no", "na", "nos", "nas", "e"];
+    const palavras = base.split(/\s+/);
+
+    let indiceCorte = palavras.length;
+    for (let i = 1; i < palavras.length; i++) {
+        const palavraLimpa = palavras[i].toLowerCase().replace(/[^a-zà-úçõãâêô]/gi, "");
+        if (conectores.includes(palavraLimpa)) {
+            indiceCorte = i;
+            break;
+        }
+    }
+
+    const resultado = palavras.slice(0, indiceCorte).join(" ").trim();
+    return resultado || nomeCompleto;
+}
+
 /** @param {any} produto */
 function criarCardProdutoHome(produto) {
     const card = document.createElement("div");
@@ -203,7 +296,7 @@ function criarCardProdutoHome(produto) {
 
     card.innerHTML = `
         <div class="card-info">${imagemHtml}</div>
-        <span class="card-titulo">${produto.nome}</span>
+        <span class="card-titulo">${nomeSecoProduto(produto.nome)}</span>
     `;
 
     return card;
@@ -233,19 +326,35 @@ function criarGrupoLoja(slug, loja) {
     const fileira = document.createElement("div");
     fileira.className = "fileira-abas";
 
-    const produtosMostrados = loja.produtos.filter(
-        (produto) => produto.nome && produto.nome.toLowerCase().includes("camisa")
-    );
-
     /** @param {any} produto */
     function adicionarCardNaFileira(produto) {
         fileira.appendChild(criarCardProdutoHome(produto));
     }
 
-    produtosMostrados.forEach(adicionarCardNaFileira);
+    /** @param {any} produto */
+    function produtoTemEstoque(produto) {
+        return produto.estoque > 0;
+    }
+
+    const produtosComEstoque = loja.produtos.filter(produtoTemEstoque);
+    const produtoDestaque = produtosComEstoque.length > 0 ? produtosComEstoque[0] : null;
+
+    if (produtoDestaque) {
+        adicionarCardNaFileira(produtoDestaque);
+    }
+
+    grupo.appendChild(fileira);
+
+    if (produtoDestaque) {
+        const nomeCompleto = document.createElement("p");
+        nomeCompleto.className = "nome-completo-home";
+        nomeCompleto.textContent = produtoDestaque.nome;
+        grupo.appendChild(nomeCompleto);
+
+        grupo.appendChild(criarInfoProdutoHome(produtoDestaque));
+    }
 
     grupo.appendChild(titulo);
-    grupo.appendChild(fileira);
 
     return grupo;
 }
@@ -269,9 +378,22 @@ function renderizarLojasParceiras() {
         return;
     }
 
-    slugs.forEach((slug) => {
+    const colunaEsquerda = document.createElement("div");
+    colunaEsquerda.className = "coluna-abas";
+
+    const colunaDireita = document.createElement("div");
+    colunaDireita.className = "coluna-abas";
+
+    containerAbas.appendChild(colunaEsquerda);
+    containerAbas.appendChild(colunaDireita);
+
+    slugs.forEach((slug, indice) => {
         const loja = LOJAS_VITRINE[slug];
-        containerAbas.appendChild(criarGrupoLoja(slug, loja));
+        const grupo = criarGrupoLoja(slug, loja);
+
+        // Alterna entre as duas colunas pra distribuir o peso visual
+        const colunaDeDestino = indice % 2 === 0 ? colunaEsquerda : colunaDireita;
+        colunaDeDestino.appendChild(grupo);
     });
 }
 

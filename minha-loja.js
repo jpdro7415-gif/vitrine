@@ -156,6 +156,7 @@ function prepararFormularioProduto(lojaId, token) {
             preco: 0,
             estoque: 0,
             parcelas: Number(document.querySelector("#produto-parcelas").value) || 1,
+            frete_gratis: document.querySelector("#produto-frete-gratis").checked,
             link_produto: document.querySelector("#produto-link").value.trim(),
             permite_busca_automatica: true
         };
@@ -180,6 +181,7 @@ function prepararFormularioProduto(lojaId, token) {
             mensagem.textContent = "Link salvo! Buscando dados do produto na sua loja...";
             form.reset();
             document.querySelector("#produto-parcelas").value = 1;
+            document.querySelector("#produto-frete-gratis").checked = false;
 
             // Aciona o robo agora mesmo, sem esperar a proxima rodada programada.
             try {
