@@ -113,18 +113,21 @@ async function carregarMinhaLoja() {
         const loja = lojas[0];
         const avisoMensalidadeHtml = mensalidadeVencida(loja) ? montarAvisoMensalidade() : "";
         const avisoPendenteHtml = loja.status === "pendente" ? montarAvisoPendente() : "";
+        const inicialLoja = loja.nome ? loja.nome.trim().charAt(0).toUpperCase() : "?";
 
         conteudo.innerHTML = `
             ${avisoPendenteHtml}
             ${avisoMensalidadeHtml}
             <div class="minhaloja-card">
-                <div class="minhaloja-nome">${loja.nome}</div>
-                <span class="minhaloja-status ${loja.status}">
-                    ${nomeAmigavelDoStatus(loja.status)}
-                </span>
-                <div class="minhaloja-info">
-                    Contato: ${loja.contato || "não informado"}<br>
-                    Cor da loja: ${loja.cor_principal}
+                <div class="minhaloja-avatar">${inicialLoja}</div>
+                <div class="minhaloja-card-corpo">
+                    <div class="minhaloja-nome">${loja.nome}</div>
+                    <span class="minhaloja-status ${loja.status}">
+                        ${nomeAmigavelDoStatus(loja.status)}
+                    </span>
+                    <div class="minhaloja-info">
+                        Contato: ${loja.contato || "não informado"}
+                    </div>
                 </div>
             </div>
         `;
@@ -152,12 +155,20 @@ async function carregarMinhaLoja() {
  * @returns {string}
  */
 function montarItemProduto(produto) {
+    const imagemHtml = produto.imagem
+        ? `<img src="${produto.imagem}" alt="${produto.nome}">`
+        : "";
+
     return `
         <div class="produto-item">
-            <div class="produto-item-nome">${produto.nome}</div>
-            <div class="produto-item-info">
-                R$ ${Number(produto.preco).toFixed(2)} · Estoque: ${produto.estoque}<br>
-                ${produto.permite_busca_automatica ? "🤖 Robô autorizado a atualizar preço" : "Atualização manual"}
+            <div class="produto-item-imagem">${imagemHtml}</div>
+            <div class="produto-item-corpo">
+                <div class="produto-item-nome">${produto.nome}</div>
+                <div class="produto-item-info">
+                    <span class="produto-item-preco">R$ ${Number(produto.preco).toFixed(2)}</span>
+                    · Estoque: ${produto.estoque}<br>
+                    ${produto.permite_busca_automatica ? "🤖 Robô autorizado a atualizar preço" : "Atualização manual"}
+                </div>
             </div>
         </div>
     `;
@@ -187,7 +198,7 @@ async function carregarProdutos(lojaId, token) {
         const produtos = await resposta.json();
 
         if (!produtos || produtos.length === 0) {
-            lista.innerHTML = `<p class="minhaloja-carregando">Você ainda não cadastrou nenhum produto.</p>`;
+            lista.innerHTML = `<div class="minhaloja-vazio">Você ainda não cadastrou nenhum produto.</div>`;
             return;
         }
 

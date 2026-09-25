@@ -22,67 +22,117 @@
             width: 100%;
             max-width: 460px;
             margin: 0 auto;
-            padding: 40px 24px 100px;
-            color: white;
+            padding: 36px 20px 110px;
             position: relative;
             z-index: 2;
+            box-sizing: border-box;
         }
 
         .minhaloja-titulo {
-            font-size: 28px;
+            color: #1a1a1a;
+            font-size: 26px;
             font-weight: 700;
-            margin-bottom: 24px;
+            margin-bottom: 22px;
         }
 
+        .minhaloja-carregando {
+            color: rgba(26, 26, 26, 0.6);
+        }
+
+        /* =========================
+           CARD DA LOJA
+        ========================= */
+
         .minhaloja-card {
-            background: #262626;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+
+            background: #ffffff;
+            border: 1px solid #ececec;
             border-radius: 18px;
-            padding: 20px;
-            margin-bottom: 20px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+
+            padding: 18px;
+            margin-bottom: 22px;
+        }
+
+        .minhaloja-avatar {
+            flex-shrink: 0;
+
+            width: 52px;
+            height: 52px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            background: #3355b3;
+
+            color: #ffffff;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .minhaloja-card-corpo {
+            flex: 1;
+            min-width: 0;
         }
 
         .minhaloja-nome {
-            font-size: 20px;
+            color: #1a1a1a;
+            font-size: 18px;
             font-weight: 700;
-            margin-bottom: 8px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            margin-bottom: 6px;
         }
 
         .minhaloja-status {
             display: inline-block;
-            padding: 6px 14px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 700;
         }
 
         .minhaloja-status.pendente {
-            background: rgba(255, 193, 7, 0.15);
-            color: #ffc107;
+            background: #fff1cc;
+            color: #a67200;
         }
 
         .minhaloja-status.aprovado {
-            background: rgba(126, 217, 87, 0.15);
-            color: #7ed957;
+            background: #d9f2e2;
+            color: #1c8a4a;
         }
 
         .minhaloja-info {
-            margin-top: 16px;
-            font-size: 14px;
-            opacity: 0.8;
+            margin-top: 10px;
+
+            color: rgba(26, 26, 26, 0.6);
+            font-size: 13px;
             line-height: 1.6;
         }
 
         .minhaloja-sair {
-            margin-top: 24px;
+            margin-top: 28px;
+
             display: inline-block;
+
+            color: #d64545;
             font-size: 14px;
-            color: #ff6b6b;
+            font-weight: 600;
+
             cursor: pointer;
         }
 
-        .minhaloja-carregando {
-            opacity: 0.7;
-        }
+        /* =========================
+           AVISOS (pendente / mensalidade)
+        ========================= */
 
         .aviso-mensalidade {
             background: #fff6e5;
@@ -137,34 +187,128 @@
             cursor: pointer;
         }
 
+        /* =========================
+           SEÇÕES (Meus produtos / Adicionar)
+        ========================= */
+
         .minhaloja-subtitulo {
-            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #1a1a1a;
+            font-size: 17px;
             font-weight: 700;
-            margin: 32px 0 16px;
+
+            margin: 30px 0 14px;
         }
 
-        .produto-item {
-            background: #262626;
+        .minhaloja-vazio {
+            background: #fafafa;
+            border: 1px dashed #dcdcdc;
             border-radius: 14px;
-            padding: 16px;
-            margin-bottom: 12px;
+
+            padding: 20px;
+            text-align: center;
+
+            color: rgba(26, 26, 26, 0.55);
+            font-size: 14px;
+        }
+
+        /* =========================
+           ITEM DE PRODUTO
+        ========================= */
+
+        .produto-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+
+            background: #ffffff;
+            border: 1px solid #ececec;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+
+            padding: 12px;
+            margin-bottom: 10px;
+        }
+
+        .produto-item-imagem {
+            flex-shrink: 0;
+
+            width: 48px;
+            height: 48px;
+
+            border-radius: 10px;
+            overflow: hidden;
+
+            background: #f0f0f0;
+        }
+
+        .produto-item-imagem img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .produto-item-corpo {
+            flex: 1;
+            min-width: 0;
         }
 
         .produto-item-nome {
-            font-weight: 700;
-            margin-bottom: 4px;
+            color: #1a1a1a;
+            font-weight: 600;
+            font-size: 14.5px;
+
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+
+            margin-bottom: 3px;
         }
 
         .produto-item-info {
+            color: rgba(26, 26, 26, 0.6);
+            font-size: 12.5px;
+            line-height: 1.5;
+        }
+
+        .produto-item-preco {
+            color: #1c8a4a;
+            font-weight: 700;
+        }
+
+        /* =========================
+           FORMULÁRIO "ADICIONAR PRODUTO"
+        ========================= */
+
+        .form-produto {
+            background: #ffffff;
+            border: 1px solid #ececec;
+            border-radius: 18px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+
+            padding: 20px 18px;
+        }
+
+        .form-produto-info {
+            color: rgba(26, 26, 26, 0.6);
             font-size: 13px;
-            opacity: 0.75;
+            line-height: 1.5;
+
+            margin: -6px 0 16px;
         }
 
         .form-produto label {
             display: block;
-            font-size: 13px;
-            opacity: 0.8;
-            margin: 12px 0 6px;
+
+            color: #1a1a1a;
+            font-size: 13.5px;
+            font-weight: 600;
+
+            margin: 14px 0 7px;
         }
 
         .form-produto input[type="text"],
@@ -172,20 +316,33 @@
         .form-produto input[type="url"],
         .form-produto textarea {
             width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #3a3a3a;
-            background: #1a1a1a;
-            color: white;
-            font-size: 14px;
             box-sizing: border-box;
+
+            padding: 13px 14px;
+
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+
+            color: #1a1a1a;
+            font-size: 15px;
+            font-family: inherit;
+
+            transition: border-color 0.2s ease, background 0.2s ease;
+        }
+
+        .form-produto input:focus,
+        .form-produto textarea:focus {
+            outline: none;
+            border-color: #3355b3;
+            background: #ffffff;
         }
 
         .form-produto-checkbox {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            margin-top: 16px;
+            margin-top: 18px;
         }
 
         .form-produto-checkbox input {
@@ -193,33 +350,34 @@
         }
 
         .form-produto-checkbox span {
-            font-size: 13px;
-            opacity: 0.85;
+            color: #1a1a1a;
+            font-size: 13.5px;
             line-height: 1.4;
         }
 
         .form-produto-botao {
-            margin-top: 20px;
             width: 100%;
             padding: 14px;
+            margin-top: 20px;
+
             border: none;
-            border-radius: 10px;
-            background: var(--cor-principal, #ff7043);
-            color: #1a1a1a;
+            border-radius: 12px;
+
+            background: #3355b3;
+            color: #ffffff;
+
             font-weight: 700;
             font-size: 15px;
+            font-family: inherit;
+
+            cursor: pointer;
         }
 
         .form-produto-mensagem {
             margin-top: 12px;
-            font-size: 13px;
-        }
 
-        .form-produto-info {
+            color: rgba(26, 26, 26, 0.7);
             font-size: 13px;
-            opacity: 0.75;
-            line-height: 1.4;
-            margin-bottom: 4px;
         }
     </style>
 </head>
@@ -240,12 +398,13 @@
         </div>
 
         <div id="secao-produtos" style="display: none;">
-            <div class="minhaloja-subtitulo">Meus produtos</div>
+            <div class="minhaloja-subtitulo">📦 Meus produtos</div>
             <div id="lista-produtos"></div>
 
-            <div class="minhaloja-subtitulo">Adicionar produto</div>
-            <p class="form-produto-info">Cole o link do produto na sua loja — nome, preço, estoque, imagem e descrição são preenchidos automaticamente pelo robô, direto da sua página.</p>
+            <div class="minhaloja-subtitulo">➕ Adicionar produto</div>
             <form class="form-produto" id="form-produto">
+                <p class="form-produto-info">Cole o link do produto na sua loja — nome, preço, estoque, imagem e descrição são preenchidos automaticamente pelo robô, direto da sua página.</p>
+
                 <label for="produto-link">Link do produto na sua loja</label>
                 <input type="url" id="produto-link" placeholder="https://..." required>
 
