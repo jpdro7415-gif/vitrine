@@ -222,39 +222,63 @@ const URL_ROBO_ATUALIZAR = SUPABASE_URL + "/functions/v1/atualizar-precos";
 function prepararFormularioProduto(lojaId, token) {
     const form = document.querySelector("#form-produto");
     const mensagem = document.querySelector("#form-produto-mensagem");
+    const container = document.querySelector("#lista-campos-links");
+
+    /** Cria uma linha de link nova e vazia. */
+    function criarLinhaLink() {
+        const linha = document.createElement("div");
+        linha.className = "linha-link";
+        linha.innerHTML = `
+            <input type="url" class="campo-link-item" placeholder="https://...">
+            <div class="linha-link-status"></div>
+        `;
+        return linha;
+    }
+
+    // Garante que sempre sobra uma linha vazia no final, pra
+    // o lojista poder colar o próximo link sem precisar
+    // criar a linha manualmente.
+    function garantirLinhaVaziaNoFinal() {
+        const camposLink = container.querySelectorAll(".campo-link-item");
+        const ultimoCampo = camposLink[camposLink.length - 1];
+
+        if (ultimoCampo && ultimoCampo.value.trim().length > 0) {
+            container.appendChild(criarLinhaLink());
+        }
+    }
+
+    container.addEventListener("input", (evento) => {
+        if (evento.target.classList.contains("campo-link-item")) {
+            garantirLinhaVaziaNoFinal();
+        }
+    });
 
     form.addEventListener("submit", async (evento) => {
         evento.preventDefault();
 
-        const textoLinks = document.querySelector("#produto-links").value;
-
-        /** @param {string} linha */
-        function removerEspacos(linha) {
-            return linha.trim();
+        /** @param {Element} linha */
+        function linhaTemLinkPreenchido(linha) {
+            const campo = linha.querySelector(".campo-link-item");
+            return campo.value.trim().length > 0;
         }
 
-        /** @param {string} linha */
-        function linhaNaoVazia(linha) {
-            return linha.length > 0;
-        }
+        const todasAsLinhas = Array.from(container.querySelectorAll(".linha-link"));
+        const linhasPreenchidas = todasAsLinhas.filter(linhaTemLinkPreenchido);
 
-        const links = textoLinks
-            .split("\n")
-            .map(removerEspacos)
-            .filter(linhaNaoVazia);
-
-        if (links.length === 0) {
+        if (linhasPreenchidas.length === 0) {
             mensagem.textContent = "Cole pelo menos um link antes de enviar.";
             return;
         }
 
-        mensagem.textContent = "Salvando " + links.length + " link(s)...";
+        mensagem.textContent = "Salvando " + linhasPreenchidas.length + " link(s)...";
+        linhasPreenchidas.forEach((linha) => linha.classList.add("carregando"));
 
         const parcelas = Number(document.querySelector("#produto-parcelas").value) || 1;
         const freteGratis = document.querySelector("#produto-frete-gratis").checked;
 
-        /** @param {string} link */
-        function montarNovoProduto(link) {
+        /** @param {Element} linha */
+        function montarNovoProdutoDaLinha(linha) {
+            const campo = linha.querySelector(".campo-link-item");
             return {
                 loja_id: lojaId,
                 nome: "Carregando...",
@@ -262,12 +286,12 @@ function prepararFormularioProduto(lojaId, token) {
                 estoque: 0,
                 parcelas: parcelas,
                 frete_gratis: freteGratis,
-                link_produto: link,
+                link_produto: campo.value.trim(),
                 permite_busca_automatica: true
             };
         }
 
-        const novosProdutos = links.map(montarNovoProduto);
+        const novosProdutos = linhasPreenchidas.map(montarNovoProdutoDaLinha);
 
         try {
             const resposta = await fetch(SUPABASE_URL + "/rest/v1/produtos", {
@@ -282,14 +306,12 @@ function prepararFormularioProduto(lojaId, token) {
             });
 
             if (!resposta.ok) {
+                linhasPreenchidas.forEach((linha) => linha.classList.remove("carregando"));
                 mensagem.textContent = "Nao conseguimos salvar os links. Confira e tente de novo.";
                 return;
             }
 
             mensagem.textContent = "Links salvos! Buscando dados dos produtos na sua loja...";
-            form.reset();
-            document.querySelector("#produto-parcelas").value = 1;
-            document.querySelector("#produto-frete-gratis").checked = false;
 
             // Aciona o robo agora mesmo, sem esperar a proxima rodada programada.
             try {
@@ -301,9 +323,26 @@ function prepararFormularioProduto(lojaId, token) {
                 // Se o robo falhar agora, a proxima rodada programada ainda pega esses produtos.
             }
 
-            mensagem.textContent = links.length + " produto(s) adicionado(s)!";
+            linhasPreenchidas.forEach((linha) => {
+                linha.classList.remove("carregando");
+                linha.classList.add("pronto");
+            });
+
+            mensagem.textContent = linhasPreenchidas.length + " produto(s) adicionado(s)!";
+
+            document.querySelector("#produto-parcelas").value = 1;
+            document.querySelector("#produto-frete-gratis").checked = false;
+
             carregarProdutos(lojaId, token);
+
+            // Depois de mostrar o verde por um instante, volta pra uma
+            // única linha vazia, pronta pro próximo lote de links.
+            setTimeout(() => {
+                container.innerHTML = "";
+                container.appendChild(criarLinhaLink());
+            }, 1200);
         } catch (erro) {
+            linhasPreenchidas.forEach((linha) => linha.classList.remove("carregando"));
             mensagem.textContent = "Erro de conexao. Tenta de novo em instantes.";
         }
     });
