@@ -58,6 +58,8 @@ async function carregarDadosSupabase() {
 
     /** @param {any} produto */
     const montarProduto = (produto) => {
+        if (produto.oculto === true) return;
+
         const loja = lojasPorId[produto.loja_id];
         if (!loja || !lojasVitrine[loja.slug]) return;
 

@@ -136,6 +136,7 @@ async function carregarMinhaLoja() {
         document.querySelector("#secao-produtos").style.display = "block";
         carregarProdutos(loja.id, token);
         prepararFormularioProduto(loja.id, token);
+        prepararAcoesProdutos(loja.id, token);
     } catch (erro) {
         conteudo.innerHTML = `<p>Não conseguimos carregar sua loja agora. Tenta de novo em instantes.</p>`;
     }
@@ -143,10 +144,12 @@ async function carregarMinhaLoja() {
 
 /**
  * @typedef {Object} ProdutoLoja
+ * @property {string} id
  * @property {string} nome
  * @property {number} preco
  * @property {number} estoque
  * @property {boolean} permite_busca_automatica
+ * @property {boolean} [oculto]
  */
 
 /**
@@ -159,8 +162,10 @@ function montarItemProduto(produto) {
         ? `<img src="${produto.imagem}" alt="${produto.nome}">`
         : "";
 
+    const estaOculto = produto.oculto === true;
+
     return `
-        <div class="produto-item">
+        <div class="produto-item ${estaOculto ? "produto-item-oculto" : ""}">
             <div class="produto-item-imagem">${imagemHtml}</div>
             <div class="produto-item-corpo">
                 <div class="produto-item-nome">${produto.nome}</div>
@@ -168,6 +173,15 @@ function montarItemProduto(produto) {
                     <span class="produto-item-preco">R$ ${Number(produto.preco).toFixed(2)}</span>
                     · Estoque: ${produto.estoque}<br>
                     ${produto.permite_busca_automatica ? "🤖 Robô autorizado a atualizar preço" : "Atualização manual"}
+                    ${estaOculto ? "<br>🙈 Oculto da Vitrine" : ""}
+                </div>
+                <div class="produto-item-acoes">
+                    <button type="button" class="produto-item-btn" data-acao="${estaOculto ? "mostrar" : "ocultar"}" data-id="${produto.id}">
+                        ${estaOculto ? "Mostrar" : "Ocultar"}
+                    </button>
+                    <button type="button" class="produto-item-btn produto-item-btn-excluir" data-acao="excluir" data-id="${produto.id}">
+                        Excluir
+                    </button>
                 </div>
             </div>
         </div>
@@ -213,6 +227,60 @@ async function carregarProdutos(lojaId, token) {
  * Precisa bater com o projeto Supabase da Vitrine.
  */
 const URL_ROBO_ATUALIZAR = SUPABASE_URL + "/functions/v1/atualizar-precos";
+
+/**
+ * Prepara os cliques nos botões de ocultar/mostrar/excluir
+ * produto, usando delegação de evento (funciona mesmo depois
+ * da lista ser redesenhada).
+ * @param {string} lojaId
+ * @param {string} token
+ */
+function prepararAcoesProdutos(lojaId, token) {
+    const lista = document.querySelector("#lista-produtos");
+
+    lista.addEventListener("click", async (evento) => {
+        const botao = evento.target.closest(".produto-item-btn");
+        if (!botao) return;
+
+        const acao = botao.dataset.acao;
+        const id = botao.dataset.id;
+
+        if (acao === "excluir") {
+            const confirmou = window.confirm("Excluir esse produto de vez? Essa ação não pode ser desfeita.");
+            if (!confirmou) return;
+
+            botao.disabled = true;
+
+            await fetch(SUPABASE_URL + "/rest/v1/produtos?id=eq." + id, {
+                method: "DELETE",
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: "Bearer " + token
+                }
+            });
+
+            carregarProdutos(lojaId, token);
+            return;
+        }
+
+        if (acao === "ocultar" || acao === "mostrar") {
+            botao.disabled = true;
+
+            await fetch(SUPABASE_URL + "/rest/v1/produtos?id=eq." + id, {
+                method: "PATCH",
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: "Bearer " + token,
+                    "Content-Type": "application/json",
+                    Prefer: "return=minimal"
+                },
+                body: JSON.stringify({ oculto: acao === "ocultar" })
+            });
+
+            carregarProdutos(lojaId, token);
+        }
+    });
+}
 
 /**
  * Prepara o envio do formulário de novo produto.
