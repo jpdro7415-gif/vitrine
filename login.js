@@ -47,6 +47,7 @@ document.querySelector("#form-login").addEventListener("submit", async (evento) 
 
         // Guarda a sessão no navegador, pra "Minha loja" usar depois
         localStorage.setItem("vitrine_token", dados.access_token);
+        localStorage.setItem("vitrine_refresh_token", dados.refresh_token);
         localStorage.setItem("vitrine_user_id", dados.user.id);
 
         window.location.href = "minha-loja.html";

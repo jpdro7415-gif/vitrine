@@ -76,8 +76,41 @@ function nomeAmigavelDoStatus(status) {
     return status;
 }
 
+/**
+ * Tenta renovar o token de acesso usando o refresh_token
+ * guardado no login. Retorna o novo token, ou null se não
+ * conseguir renovar (aí sim precisa logar de novo).
+ * @returns {Promise<string | null>}
+ */
+async function renovarSessao() {
+    const refreshToken = localStorage.getItem("vitrine_refresh_token");
+    if (!refreshToken) return null;
+
+    try {
+        const resposta = await fetch(SUPABASE_URL + "/auth/v1/token?grant_type=refresh_token", {
+            method: "POST",
+            headers: {
+                apikey: SUPABASE_ANON_KEY,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ refresh_token: refreshToken })
+        });
+
+        if (!resposta.ok) return null;
+
+        const dados = await resposta.json();
+
+        localStorage.setItem("vitrine_token", dados.access_token);
+        localStorage.setItem("vitrine_refresh_token", dados.refresh_token);
+
+        return dados.access_token;
+    } catch (erro) {
+        return null;
+    }
+}
+
 async function carregarMinhaLoja() {
-    const token = localStorage.getItem("vitrine_token");
+    let token = localStorage.getItem("vitrine_token");
     const conteudo = document.querySelector("#conteudo-minha-loja");
 
     if (!token) {
@@ -86,7 +119,7 @@ async function carregarMinhaLoja() {
     }
 
     try {
-        const resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
+        let resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
             headers: {
                 apikey: SUPABASE_ANON_KEY,
                 Authorization: "Bearer " + token
@@ -94,11 +127,25 @@ async function carregarMinhaLoja() {
         });
 
         if (resposta.status === 401) {
-            // Sessão expirou, manda pro login de novo
-            localStorage.removeItem("vitrine_token");
-            localStorage.removeItem("vitrine_user_id");
-            window.location.href = "login.html";
-            return;
+            // Access token expirou -- tenta renovar com o refresh_token
+            // antes de desistir e mandar pro login.
+            const novoToken = await renovarSessao();
+
+            if (!novoToken) {
+                localStorage.removeItem("vitrine_token");
+                localStorage.removeItem("vitrine_refresh_token");
+                localStorage.removeItem("vitrine_user_id");
+                window.location.href = "login.html";
+                return;
+            }
+
+            token = novoToken;
+            resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: "Bearer " + token
+                }
+            });
         }
 
         const lojas = await resposta.json();
@@ -418,6 +465,7 @@ function prepararFormularioProduto(lojaId, token) {
 
 document.querySelector("#botao-sair").addEventListener("click", () => {
     localStorage.removeItem("vitrine_token");
+    localStorage.removeItem("vitrine_refresh_token");
     localStorage.removeItem("vitrine_user_id");
     window.location.href = "login.html";
 });
