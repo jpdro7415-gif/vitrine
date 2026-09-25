@@ -22,78 +22,197 @@
             width: 100%;
             max-width: 460px;
             margin: 0 auto;
-            padding: 40px 24px 100px;
-            color: #1a1a1a;
+            padding: 36px 20px 110px;
             position: relative;
             z-index: 2;
+            box-sizing: border-box;
         }
 
         .parceiro-titulo {
-            font-size: 28px;
+            color: #1a1a1a;
+            font-size: 26px;
             font-weight: 700;
             margin-bottom: 8px;
         }
 
         .parceiro-subtitulo {
+            color: rgba(26, 26, 26, 0.7);
             font-size: 15px;
-            opacity: 0.75;
             line-height: 1.5;
-            margin-bottom: 32px;
+            margin-bottom: 18px;
+        }
+
+        .parceiro-regras {
+            background: #fff6e5;
+            border: 1px solid #f0d99a;
+            border-radius: 14px;
+
+            padding: 14px 16px;
+
+            margin-bottom: 24px;
+        }
+
+        .parceiro-regras-titulo {
+            color: #1a1a1a;
+            font-size: 14.5px;
+            font-weight: 700;
+
+            margin-bottom: 6px;
+        }
+
+        .parceiro-regras-texto {
+            color: rgba(26, 26, 26, 0.8);
+            font-size: 13.5px;
+            line-height: 1.5;
+
+            margin-bottom: 8px;
+        }
+
+        .parceiro-regras-lista {
+            margin: 0;
+            padding-left: 18px;
+
+            color: rgba(26, 26, 26, 0.8);
+            font-size: 13.5px;
+            line-height: 1.6;
+        }
+
+        /* =========================
+           BENEFÍCIOS (proposta de valor)
+        ========================= */
+
+        .parceiro-beneficios {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            margin-bottom: 28px;
+        }
+
+        .parceiro-beneficio {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            padding: 12px 14px;
+
+            background: #ffffff;
+            border: 1px solid #ececec;
+            border-radius: 14px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+        }
+
+        .parceiro-beneficio-icone {
+            flex-shrink: 0;
+
+            width: 30px;
+            height: 30px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 50%;
+            background: rgba(51, 85, 179, 0.1);
+
+            font-size: 15px;
+        }
+
+        .parceiro-beneficio-texto {
+            color: #1a1a1a;
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .parceiro-beneficio-texto strong {
+            display: block;
+            font-size: 14.5px;
+            margin-bottom: 2px;
+        }
+
+        /* =========================
+           FORMULÁRIO
+        ========================= */
+
+        .parceiro-form-card {
+            background: #ffffff;
+            border: 1px solid #ececec;
+            border-radius: 18px;
+            box-shadow: 0 2px 14px rgba(0, 0, 0, 0.05);
+
+            padding: 22px 18px;
+        }
+
+        .parceiro-form-titulo {
+            color: #1a1a1a;
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .parceiro-form-subtitulo {
+            color: rgba(26, 26, 26, 0.55);
+            font-size: 13px;
+            margin-bottom: 20px;
         }
 
         .parceiro-campo {
-            margin-bottom: 20px;
+            margin-bottom: 18px;
         }
 
         .parceiro-campo label {
             display: block;
-            font-size: 14px;
-            opacity: 0.85;
-            margin-bottom: 8px;
+
+            color: #1a1a1a;
+            font-size: 13.5px;
+            font-weight: 600;
+
+            margin-bottom: 7px;
+        }
+
+        .parceiro-campo-dica {
+            display: block;
+
+            color: rgba(26, 26, 26, 0.5);
+            font-size: 12px;
+
+            margin-top: 5px;
         }
 
         .parceiro-campo input,
         .parceiro-campo textarea {
             width: 100%;
-            padding: 14px 16px;
-            border-radius: 14px;
-            border: 1px solid #dcdcdc;
-            background: #ffffff;
+            box-sizing: border-box;
+
+            padding: 13px 14px;
+
+            border-radius: 12px;
+            border: 1px solid #e0e0e0;
+            background: #fafafa;
+
             color: #1a1a1a;
             font-size: 15px;
             font-family: inherit;
+
+            transition: border-color 0.2s ease, background 0.2s ease;
         }
 
         .parceiro-campo input:focus,
         .parceiro-campo textarea:focus {
             outline: none;
             border-color: #3355b3;
+            background: #ffffff;
         }
 
         .parceiro-campo textarea {
             resize: vertical;
-            min-height: 90px;
-        }
-
-        .parceiro-cor-linha {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .parceiro-cor-linha input[type="color"] {
-            width: 52px;
-            height: 52px;
-            padding: 0;
-            border-radius: 14px;
-            border: 1px solid #dcdcdc;
-            background: #ffffff;
+            min-height: 84px;
         }
 
         .parceiro-botao {
             width: 100%;
-            padding: 16px;
-            margin-top: 8px;
+            padding: 15px;
+            margin-top: 6px;
 
             border: none;
             border-radius: 14px;
@@ -110,7 +229,7 @@
         }
 
         .parceiro-botao:active {
-            filter: brightness(0.9);
+            filter: brightness(0.92);
         }
 
         .parceiro-botao:disabled {
@@ -119,9 +238,11 @@
         }
 
         .parceiro-status {
-            margin-top: 18px;
+            margin-top: 16px;
+
             font-size: 14px;
             line-height: 1.5;
+
             display: none;
         }
 
@@ -130,11 +251,47 @@
         }
 
         .parceiro-status.sucesso {
-            color: #7ed957;
+            color: #1c8a4a;
         }
 
         .parceiro-status.erro {
-            color: #ff6b6b;
+            color: #d64545;
+        }
+
+        .parceiro-rodape-nota {
+            margin-top: 18px;
+
+            color: rgba(26, 26, 26, 0.45);
+            font-size: 12px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        .parceiro-confirmacoes {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+
+            margin-bottom: 18px;
+        }
+
+        .parceiro-confirmacao-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+
+            cursor: pointer;
+        }
+
+        .parceiro-confirmacao-item input {
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+
+        .parceiro-confirmacao-item span {
+            color: #1a1a1a;
+            font-size: 13.5px;
+            line-height: 1.4;
         }
     </style>
 </head>
@@ -150,58 +307,127 @@
     <div class="parceiro-pagina">
         <div class="parceiro-titulo">Seja parceiro da Vitrine</div>
         <div class="parceiro-subtitulo">
-            Preencha os dados da sua loja abaixo. A gente confere e,
-            assim que aprovado, sua loja aparece pra todo mundo que
-            visita a Vitrine.
+            Coloque sua loja na frente de mais gente. O primeiro mês é
+            100% grátis — depois disso, a Vitrine passa a cobrar uma
+            mensalidade pra continuar com sua loja visível.
         </div>
 
-        <form id="form-parceiro">
-            <div class="parceiro-campo">
-                <label for="campo-nome">Nome da loja</label>
-                <input type="text" id="campo-nome" required>
+        <div class="parceiro-regras">
+            <div class="parceiro-regras-titulo">⚠️ Antes de continuar</div>
+            <div class="parceiro-regras-texto">
+                A Vitrine não vende por você — ela só ajuda o cliente
+                a te encontrar. Por isso, <strong>não é possível se
+                cadastrar sem já ter uma loja online funcionando</strong>.
+                Pra participar, você precisa ter:
             </div>
+            <ul class="parceiro-regras-lista">
+                <li>Uma loja online já no ar (site próprio, Instagram
+                    Shopping, WhatsApp Business, Nuvemshop, Shopify etc.)</li>
+                <li>Entrega própria já resolvida (Correios,
+                    transportadora, motoboy ou retirada)</li>
+                <li>Preço e forma de pagamento definidos na sua
+                    própria loja</li>
+            </ul>
+        </div>
 
-            <div class="parceiro-campo">
-                <label for="campo-email">E-mail (pra fazer login depois)</label>
-                <input type="email" id="campo-email" required>
-            </div>
-
-            <div class="parceiro-campo">
-                <label for="campo-senha">Senha</label>
-                <input type="password" id="campo-senha" required minlength="6">
-            </div>
-
-            <div class="parceiro-campo">
-                <label for="campo-contato">WhatsApp pra contato</label>
-                <input type="text" id="campo-contato" required>
-            </div>
-
-            <div class="parceiro-campo">
-                <label for="campo-cor">Cor da sua loja</label>
-                <div class="parceiro-cor-linha">
-                    <input type="color" id="campo-cor" value="#3355b3">
+        <div class="parceiro-beneficios">
+            <div class="parceiro-beneficio">
+                <div class="parceiro-beneficio-icone">💸</div>
+                <div class="parceiro-beneficio-texto">
+                    <strong>100% grátis no 1º mês</strong>
+                    Sem cartão, sem cobrança de cara. A partir do 2º
+                    mês, passa a valer a mensalidade de R$ 15,00.
                 </div>
             </div>
 
-            <div class="parceiro-campo">
-                <label for="campo-mensagem">Conte um pouco sobre sua loja (opcional)</label>
-                <textarea id="campo-mensagem"></textarea>
+            <div class="parceiro-beneficio">
+                <div class="parceiro-beneficio-icone">🔄</div>
+                <div class="parceiro-beneficio-texto">
+                    <strong>Preço sempre atualizado</strong>
+                    Com sua autorização, a gente mantém preço e estoque
+                    em dia sozinhos — você não precisa ficar editando.
+                </div>
             </div>
 
-            <button type="submit" class="parceiro-botao" id="botao-enviar">
-                Enviar cadastro
-            </button>
+            <div class="parceiro-beneficio">
+                <div class="parceiro-beneficio-icone">🔒</div>
+                <div class="parceiro-beneficio-texto">
+                    <strong>Você continua no controle</strong>
+                    O cliente sempre finaliza a compra direto na sua
+                    loja. A Vitrine só ajuda ele a te encontrar.
+                </div>
+            </div>
+        </div>
 
-            <div class="parceiro-status" id="status-envio"></div>
-        </form>
+        <div class="parceiro-form-card">
+            <div class="parceiro-form-titulo">Dados da sua loja</div>
+            <div class="parceiro-form-subtitulo">Leva menos de 2 minutos.</div>
+
+            <form id="form-parceiro">
+                <div class="parceiro-campo">
+                    <label for="campo-nome">Nome da loja</label>
+                    <input type="text" id="campo-nome" required>
+                </div>
+
+                <div class="parceiro-campo">
+                    <label for="campo-link-loja">Link da sua loja online</label>
+                    <input type="url" id="campo-link-loja" placeholder="https://..." required>
+                    <span class="parceiro-campo-dica">Site, Instagram Shopping ou WhatsApp Business — o lugar onde o cliente já consegue comprar de você.</span>
+                </div>
+
+                <div class="parceiro-campo">
+                    <label for="campo-email">E-mail</label>
+                    <input type="email" id="campo-email" required>
+                    <span class="parceiro-campo-dica">É com ele que você faz login em "Minha loja" depois.</span>
+                </div>
+
+                <div class="parceiro-campo">
+                    <label for="campo-senha">Senha</label>
+                    <input type="password" id="campo-senha" required minlength="6">
+                </div>
+
+                <div class="parceiro-campo">
+                    <label for="campo-contato">WhatsApp para contato</label>
+                    <input type="text" id="campo-contato" required>
+                </div>
+
+                <div class="parceiro-campo">
+                    <label for="campo-mensagem">Conte um pouco sobre sua loja (opcional)</label>
+                    <textarea id="campo-mensagem"></textarea>
+                </div>
+
+                <div class="parceiro-confirmacoes">
+                    <label class="parceiro-confirmacao-item">
+                        <input type="checkbox" id="campo-confirma-loja-online" required>
+                        <span>Confirmo que minha loja já está online e vendendo de verdade.</span>
+                    </label>
+                    <label class="parceiro-confirmacao-item">
+                        <input type="checkbox" id="campo-confirma-entrega" required>
+                        <span>Confirmo que já tenho uma forma própria de entrega resolvida.</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="parceiro-botao" id="botao-enviar">
+                    Começar grátis por 30 dias
+                </button>
+
+                <div class="parceiro-status" id="status-envio"></div>
+            </form>
+        </div>
+
+        <div class="parceiro-rodape-nota">
+            Ao enviar, sua loja entra na fila de aprovação. A gente
+            avisa assim que ela estiver no ar. Sem cartão de crédito
+            agora — a mensalidade de R$ 15,00 só começa a valer a
+            partir do 2º mês.
+        </div>
     </div>
-
 
     <!-- Navegação entre a Vitrine e o cadastro de parceiro -->
     <div class="nav-vitrine">
-        <a href="index.html" class="nav-vitrine-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg><span>Início</span></a>
-        <a href="parceiros.html" class="nav-vitrine-item nav-vitrine-ativo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"></path><path d="M4 9v10a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"></path><path d="M9 20v-6h6v6"></path></svg><span>Parceiro</span></a>
-        <a href="login.html" class="nav-vitrine-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg><span>Minha loja</span></a>
+        <a href="index.html" class="nav-vitrine-item">Início</a>
+        <a href="parceiros.html" class="nav-vitrine-item nav-vitrine-ativo">Parceiro</a>
+        <a href="login.html" class="nav-vitrine-item">Minha loja</a>
     </div>
 
     <script src="cadastro-parceiros.js"></script>

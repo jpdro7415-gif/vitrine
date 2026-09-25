@@ -7,6 +7,68 @@
 const SUPABASE_URL = "https://wodfhcbzslrplbcfyrrz.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvZGZoY2J6c2xycGxiY2Z5cnJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1NjY1NTMsImV4cCI6MjA4NzE0MjU1M30.8Wq4_b4jSwJniQfOkrMLRbklbsMc_rFrTL9CeRz-Knk";
 
+/**
+ * Decide se o período de teste grátis de 30 dias já acabou
+ * e a loja ainda não está com o pagamento em dia.
+ * @param {any} loja
+ * @returns {boolean}
+ */
+function mensalidadeVencida(loja) {
+    if (!loja.criado_em) return false;
+
+    const agora = new Date();
+
+    const fimDoTeste = new Date(loja.criado_em);
+    fimDoTeste.setDate(fimDoTeste.getDate() + 30);
+
+    const aindaNoTesteGratis = agora < fimDoTeste;
+    if (aindaNoTesteGratis) return false;
+
+    const pagoAte = loja.pago_ate ? new Date(loja.pago_ate + "T23:59:59") : null;
+    const pagamentoEmDia = pagoAte && pagoAte >= agora;
+
+    return !pagamentoEmDia;
+}
+
+/**
+ * Monta o aviso mostrado quando o mês grátis acabou e a
+ * loja ainda não está com o pagamento em dia.
+ * @returns {string}
+ */
+function montarAvisoMensalidade() {
+    return `
+        <div class="aviso-mensalidade">
+            <div class="aviso-mensalidade-titulo">⏰ Seu mês grátis acabou</div>
+            <div class="aviso-mensalidade-texto">
+                Pra continuar aparecendo na Vitrine, a mensalidade é de
+                <span class="aviso-mensalidade-valor">R$ 15,00 por mês</span>.
+                Fala com a gente pra continuar.
+            </div>
+            <a href="#" class="aviso-mensalidade-botao">Falar com a gente</a>
+        </div>
+    `;
+}
+
+/**
+ * Monta o aviso destacado mostrado enquanto a loja
+ * ainda está esperando aprovação manual.
+ * @returns {string}
+ */
+function montarAvisoPendente() {
+    return `
+        <div class="aviso-mensalidade">
+            <div class="aviso-mensalidade-titulo">⏳ Sua loja está em análise</div>
+            <div class="aviso-mensalidade-texto">
+                A gente confere manualmente se tudo está certinho
+                (loja online funcionando, informações de entrega, etc.)
+                antes de aprovar. Isso costuma levar pouco tempo.
+                Assim que aprovarmos, sua loja aparece na Vitrine
+                automaticamente — não precisa fazer mais nada.
+            </div>
+        </div>
+    `;
+}
+
 /** @param {string} status */
 function nomeAmigavelDoStatus(status) {
     if (status === "aprovado") return "Aprovado - já está na Vitrine";
@@ -49,8 +111,12 @@ async function carregarMinhaLoja() {
         }
 
         const loja = lojas[0];
+        const avisoMensalidadeHtml = mensalidadeVencida(loja) ? montarAvisoMensalidade() : "";
+        const avisoPendenteHtml = loja.status === "pendente" ? montarAvisoPendente() : "";
 
         conteudo.innerHTML = `
+            ${avisoPendenteHtml}
+            ${avisoMensalidadeHtml}
             <div class="minhaloja-card">
                 <div class="minhaloja-nome">${loja.nome}</div>
                 <span class="minhaloja-status ${loja.status}">
