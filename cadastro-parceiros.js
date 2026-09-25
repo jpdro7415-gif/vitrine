@@ -33,13 +33,16 @@ document.querySelector("#form-parceiro").addEventListener("submit", async (event
 
     const botao = document.querySelector("#botao-enviar");
     const nome = document.querySelector("#campo-nome").value.trim();
+    const linkLoja = document.querySelector("#campo-link-loja").value.trim();
     const email = document.querySelector("#campo-email").value.trim();
     const senha = document.querySelector("#campo-senha").value;
     const contato = document.querySelector("#campo-contato").value.trim();
-    const cor = document.querySelector("#campo-cor").value;
     const mensagem = document.querySelector("#campo-mensagem").value.trim();
+    const confirmaLojaOnline = document.querySelector("#campo-confirma-loja-online").checked;
+    const confirmaEntrega = document.querySelector("#campo-confirma-entrega").checked;
 
-    if (!nome || !email || !senha || !contato) return;
+    if (!nome || !linkLoja || !email || !senha || !contato) return;
+    if (!confirmaLojaOnline || !confirmaEntrega) return;
 
     botao.disabled = true;
     botao.textContent = "Enviando...";
@@ -106,11 +109,14 @@ document.querySelector("#form-parceiro").addEventListener("submit", async (event
         }
 
         // Passo 2: cria a loja, já ligada a essa conta
+        // Todas as lojas usam a mesma cor de destaque, a azul
+        // padrão da Vitrine -- mantém o app visualmente consistente.
         const corpo = {
             slug: gerarSlug(nome) + "-" + Date.now().toString().slice(-5),
             nome: nome,
+            link_loja: linkLoja,
             contato: contato,
-            cor_principal: cor,
+            cor_principal: "#3355b3",
             ano_entrada: new Date().getFullYear(),
             user_id: usuarioId
         };

@@ -403,10 +403,10 @@
 
             <div class="minhaloja-subtitulo">➕ Adicionar produto</div>
             <form class="form-produto" id="form-produto">
-                <p class="form-produto-info">Cole o link do produto na sua loja — nome, preço, estoque, imagem e descrição são preenchidos automaticamente pelo robô, direto da sua página.</p>
+                <p class="form-produto-info">Cole os links dos produtos da sua loja, um por linha — nome, preço, estoque, imagem e descrição são preenchidos automaticamente pelo robô, direto da sua página. As parcelas e o frete grátis marcados aqui valem pra todos os links colados.</p>
 
-                <label for="produto-link">Link do produto na sua loja</label>
-                <input type="url" id="produto-link" placeholder="https://..." required>
+                <label for="produto-links">Links dos produtos (um por linha)</label>
+                <textarea id="produto-links" rows="5" placeholder="https://minhaloja.com/produto-1&#10;https://minhaloja.com/produto-2&#10;https://minhaloja.com/produto-3" required></textarea>
 
                 <label for="produto-parcelas">Em quantas parcelas sem juros? (ex: 3)</label>
                 <input type="number" id="produto-parcelas" min="1" max="24" value="1">
@@ -416,7 +416,7 @@
                     <span>Este produto tem frete grátis.</span>
                 </div>
 
-                <button type="submit" class="form-produto-botao">Adicionar produto</button>
+                <button type="submit" class="form-produto-botao">Adicionar produtos</button>
                 <div class="form-produto-mensagem" id="form-produto-mensagem"></div>
             </form>
         </div>

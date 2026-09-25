@@ -225,18 +225,49 @@ function prepararFormularioProduto(lojaId, token) {
 
     form.addEventListener("submit", async (evento) => {
         evento.preventDefault();
-        mensagem.textContent = "Salvando link do produto...";
 
-        const novoProduto = {
-            loja_id: lojaId,
-            nome: "Carregando...",
-            preco: 0,
-            estoque: 0,
-            parcelas: Number(document.querySelector("#produto-parcelas").value) || 1,
-            frete_gratis: document.querySelector("#produto-frete-gratis").checked,
-            link_produto: document.querySelector("#produto-link").value.trim(),
-            permite_busca_automatica: true
-        };
+        const textoLinks = document.querySelector("#produto-links").value;
+
+        /** @param {string} linha */
+        function removerEspacos(linha) {
+            return linha.trim();
+        }
+
+        /** @param {string} linha */
+        function linhaNaoVazia(linha) {
+            return linha.length > 0;
+        }
+
+        const links = textoLinks
+            .split("\n")
+            .map(removerEspacos)
+            .filter(linhaNaoVazia);
+
+        if (links.length === 0) {
+            mensagem.textContent = "Cole pelo menos um link antes de enviar.";
+            return;
+        }
+
+        mensagem.textContent = "Salvando " + links.length + " link(s)...";
+
+        const parcelas = Number(document.querySelector("#produto-parcelas").value) || 1;
+        const freteGratis = document.querySelector("#produto-frete-gratis").checked;
+
+        /** @param {string} link */
+        function montarNovoProduto(link) {
+            return {
+                loja_id: lojaId,
+                nome: "Carregando...",
+                preco: 0,
+                estoque: 0,
+                parcelas: parcelas,
+                frete_gratis: freteGratis,
+                link_produto: link,
+                permite_busca_automatica: true
+            };
+        }
+
+        const novosProdutos = links.map(montarNovoProduto);
 
         try {
             const resposta = await fetch(SUPABASE_URL + "/rest/v1/produtos", {
@@ -247,15 +278,15 @@ function prepararFormularioProduto(lojaId, token) {
                     "Content-Type": "application/json",
                     Prefer: "return=minimal"
                 },
-                body: JSON.stringify(novoProduto)
+                body: JSON.stringify(novosProdutos)
             });
 
             if (!resposta.ok) {
-                mensagem.textContent = "Nao conseguimos salvar o produto. Confira o link e tente de novo.";
+                mensagem.textContent = "Nao conseguimos salvar os links. Confira e tente de novo.";
                 return;
             }
 
-            mensagem.textContent = "Link salvo! Buscando dados do produto na sua loja...";
+            mensagem.textContent = "Links salvos! Buscando dados dos produtos na sua loja...";
             form.reset();
             document.querySelector("#produto-parcelas").value = 1;
             document.querySelector("#produto-frete-gratis").checked = false;
@@ -267,10 +298,10 @@ function prepararFormularioProduto(lojaId, token) {
                     headers: { Authorization: "Bearer " + SUPABASE_ANON_KEY }
                 });
             } catch (erroRobo) {
-                // Se o robo falhar agora, a proxima rodada programada ainda pega esse produto.
+                // Se o robo falhar agora, a proxima rodada programada ainda pega esses produtos.
             }
 
-            mensagem.textContent = "Produto adicionado!";
+            mensagem.textContent = links.length + " produto(s) adicionado(s)!";
             carregarProdutos(lojaId, token);
         } catch (erro) {
             mensagem.textContent = "Erro de conexao. Tenta de novo em instantes.";
