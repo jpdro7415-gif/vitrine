@@ -68,6 +68,35 @@
             border-color: #3355b3;
         }
 
+        .campo-senha-wrapper {
+            position: relative;
+        }
+
+        .campo-senha-wrapper input {
+            padding-right: 46px;
+        }
+
+        .botao-olho-senha {
+            position: absolute;
+            top: 50%;
+            right: 12px;
+            transform: translateY(-50%);
+
+            border: none;
+            background: none;
+
+            display: flex;
+            align-items: center;
+
+            color: rgba(26, 26, 26, 0.45);
+
+            cursor: pointer;
+        }
+
+        .botao-olho-senha.ativo {
+            color: #3355b3;
+        }
+
         .login-botao {
             width: 100%;
             padding: 16px;
@@ -144,7 +173,12 @@
 
             <div class="login-campo">
                 <label for="campo-senha">Senha</label>
-                <input type="password" id="campo-senha" required>
+                <div class="campo-senha-wrapper">
+                    <input type="password" id="campo-senha" required>
+                    <button type="button" class="botao-olho-senha" data-campo="campo-senha" aria-label="Mostrar senha">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                    </button>
+                </div>
             </div>
 
             <button type="submit" class="login-botao" id="botao-entrar">
@@ -169,6 +203,17 @@
     </div>
 
     <script src="login.js"></script>
+    <script>
+        document.querySelectorAll(".botao-olho-senha").forEach((botao) => {
+            botao.addEventListener("click", () => {
+                const campo = document.querySelector("#" + botao.dataset.campo);
+                const mostrando = campo.type === "text";
+
+                campo.type = mostrando ? "password" : "text";
+                botao.classList.toggle("ativo", !mostrando);
+            });
+        });
+    </script>
 </body>
 
 </html>
