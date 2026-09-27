@@ -493,6 +493,9 @@ function prepararFormularioProduto(lojaId, token) {
 }
 
 document.querySelector("#botao-sair").addEventListener("click", () => {
+    const confirmou = window.confirm("Tem certeza que quer sair da conta?");
+    if (!confirmou) return;
+
     localStorage.removeItem("vitrine_token");
     localStorage.removeItem("vitrine_refresh_token");
     localStorage.removeItem("vitrine_user_id");
