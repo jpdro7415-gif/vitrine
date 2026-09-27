@@ -513,6 +513,8 @@
 </head>
 
 <body>
+    <div id="debug-token" style="position:fixed;top:0;left:0;right:0;z-index:99999;background:#000;color:#0f0;font-size:11px;padding:6px;word-break:break-all;"></div>
+    <script>document.querySelector("#debug-token").textContent = "TOKEN: " + (localStorage.getItem("vitrine_token") ? localStorage.getItem("vitrine_token").slice(0,25) + "..." : "NULO");</script>
 
     <!-- Manchas do fundo -->
     <div class="mancha mancha-1"></div>
