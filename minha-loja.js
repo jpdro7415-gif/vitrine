@@ -127,25 +127,18 @@ async function carregarMinhaLoja() {
         });
 
         if (resposta.status === 401) {
-            // Access token expirou -- tenta renovar com o refresh_token
-            // antes de desistir e mandar pro login.
-            const novoToken = await renovarSessao();
+            const corpoErro = await resposta.text();
 
-            if (!novoToken) {
-                localStorage.removeItem("vitrine_token");
-                localStorage.removeItem("vitrine_refresh_token");
-                localStorage.removeItem("vitrine_user_id");
-                window.location.href = "login.html";
-                return;
-            }
-
-            token = novoToken;
-            resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
-                headers: {
-                    apikey: SUPABASE_ANON_KEY,
-                    Authorization: "Bearer " + token
-                }
-            });
+            // MODO DEBUG: mostra o erro real em vez de redirecionar direto,
+            // pra entendermos por que o Supabase está recusando o token.
+            conteudo.innerHTML = `
+                <div style="background:#fff6e5; border:1px solid #f0d99a; border-radius:14px; padding:16px; font-size:13px; color:#1a1a1a; word-break:break-all;">
+                    <strong>DEBUG - erro 401 ao carregar loja</strong><br><br>
+                    Resposta do Supabase:<br>
+                    <code>${corpoErro}</code>
+                </div>
+            `;
+            return;
         }
 
         const lojas = await resposta.json();
