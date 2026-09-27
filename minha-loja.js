@@ -8,6 +8,24 @@ const SUPABASE_URL = "https://wodfhcbzslrplbcfyrrz.supabase.co";
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6IndvZGZoY2J6c2xycGxiY2Z5cnJ6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzE1NjY1NTMsImV4cCI6MjA4NzE0MjU1M30.8Wq4_b4jSwJniQfOkrMLRbklbsMc_rFrTL9CeRz-Knk";
 
 /**
+ * Escapa texto antes de inserir no HTML, pra evitar que nome
+ * ou descrição de produto (que vem de sites externos, via robô)
+ * consiga injetar código na página.
+ * @param {string | null | undefined} texto
+ * @returns {string}
+ */
+function escaparHtml(texto) {
+    if (texto === null || texto === undefined) return "";
+
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
+/**
  * Decide se o período de teste grátis de 30 dias já acabou
  * e a loja ainda não está com o pagamento em dia.
  * @param {any} loja
@@ -109,16 +127,30 @@ async function renovarSessao() {
     }
 }
 
+/**
+ * Escreve uma linha de debug na faixa preta do topo (soma
+ * com o que já está escrito, não substitui).
+ * @param {string} texto
+ */
+function debugLog(texto) {
+    const faixa = document.querySelector("#debug-token");
+    if (faixa) faixa.textContent += " | " + texto;
+}
+
 async function carregarMinhaLoja() {
     let token = localStorage.getItem("vitrine_token");
     const conteudo = document.querySelector("#conteudo-minha-loja");
 
+    debugLog("passo1:token=" + (token ? "existe" : "NULO"));
+
     if (!token) {
+        debugLog("passo2:indo pro login por falta de token");
         window.location.href = "login.html";
         return;
     }
 
     try {
+        debugLog("passo2:chamando fetch lojas");
         let resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
             headers: {
                 apikey: SUPABASE_ANON_KEY,
@@ -126,8 +158,11 @@ async function carregarMinhaLoja() {
             }
         });
 
+        debugLog("passo3:status=" + resposta.status);
+
         if (resposta.status === 401) {
             const corpoErro = await resposta.text();
+            debugLog("passo4:erro401=" + corpoErro.slice(0, 150));
 
             // MODO DEBUG: mostra o erro real em vez de redirecionar direto,
             // pra entendermos por que o Supabase está recusando o token.
@@ -142,6 +177,7 @@ async function carregarMinhaLoja() {
         }
 
         const lojas = await resposta.json();
+        debugLog("passo4:lojas encontradas=" + (lojas ? lojas.length : "erro ao ler json"));
 
         if (!lojas || lojas.length === 0) {
             conteudo.innerHTML = `
@@ -161,12 +197,12 @@ async function carregarMinhaLoja() {
             <div class="minhaloja-card">
                 <div class="minhaloja-avatar">${inicialLoja}</div>
                 <div class="minhaloja-card-corpo">
-                    <div class="minhaloja-nome">${loja.nome}</div>
+                    <div class="minhaloja-nome">${escaparHtml(loja.nome)}</div>
                     <span class="minhaloja-status ${loja.status}">
                         ${nomeAmigavelDoStatus(loja.status)}
                     </span>
                     <div class="minhaloja-info">
-                        Contato: ${loja.contato || "não informado"}
+                        Contato: ${escaparHtml(loja.contato) || "não informado"}
                     </div>
                 </div>
             </div>
@@ -199,7 +235,7 @@ async function carregarMinhaLoja() {
  */
 function montarItemProduto(produto) {
     const imagemHtml = produto.imagem
-        ? `<img src="${produto.imagem}" alt="${produto.nome}">`
+        ? `<img src="${escaparHtml(produto.imagem)}" alt="${escaparHtml(produto.nome)}">`
         : "";
 
     const estaOculto = produto.oculto === true;
@@ -208,7 +244,7 @@ function montarItemProduto(produto) {
         <div class="produto-item ${estaOculto ? "produto-item-oculto" : ""}">
             <div class="produto-item-imagem">${imagemHtml}</div>
             <div class="produto-item-corpo">
-                <div class="produto-item-nome">${produto.nome}</div>
+                <div class="produto-item-nome">${escaparHtml(produto.nome)}</div>
                 <div class="produto-item-info">
                     <span class="produto-item-preco">R$ ${Number(produto.preco).toFixed(2)}</span>
                     · Estoque: ${produto.estoque}<br>
