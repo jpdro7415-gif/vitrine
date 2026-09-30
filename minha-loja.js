@@ -122,35 +122,21 @@ async function renovarSessao() {
         localStorage.setItem("vitrine_refresh_token", dados.refresh_token);
 
         return dados.access_token;
-    } catch (erro) {
+    } catch {
         return null;
     }
-}
-
-/**
- * Escreve uma linha de debug na faixa preta do topo (soma
- * com o que já está escrito, não substitui).
- * @param {string} texto
- */
-function debugLog(texto) {
-    const faixa = document.querySelector("#debug-token");
-    if (faixa) faixa.textContent += " | " + texto;
 }
 
 async function carregarMinhaLoja() {
     let token = localStorage.getItem("vitrine_token");
     const conteudo = document.querySelector("#conteudo-minha-loja");
 
-    debugLog("passo1:token=" + (token ? "existe" : "NULO"));
-
     if (!token) {
-        debugLog("passo2:indo pro login por falta de token");
         window.location.href = "login.html";
         return;
     }
 
     try {
-        debugLog("passo2:chamando fetch lojas");
         let resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
             headers: {
                 apikey: SUPABASE_ANON_KEY,
@@ -158,26 +144,29 @@ async function carregarMinhaLoja() {
             }
         });
 
-        debugLog("passo3:status=" + resposta.status);
-
         if (resposta.status === 401) {
-            const corpoErro = await resposta.text();
-            debugLog("passo4:erro401=" + corpoErro.slice(0, 150));
+            // Access token expirou -- tenta renovar com o refresh_token
+            // antes de desistir e mandar pro login.
+            const novoToken = await renovarSessao();
 
-            // MODO DEBUG: mostra o erro real em vez de redirecionar direto,
-            // pra entendermos por que o Supabase está recusando o token.
-            conteudo.innerHTML = `
-                <div style="background:#fff6e5; border:1px solid #f0d99a; border-radius:14px; padding:16px; font-size:13px; color:#1a1a1a; word-break:break-all;">
-                    <strong>DEBUG - erro 401 ao carregar loja</strong><br><br>
-                    Resposta do Supabase:<br>
-                    <code>${corpoErro}</code>
-                </div>
-            `;
-            return;
+            if (!novoToken) {
+                localStorage.removeItem("vitrine_token");
+                localStorage.removeItem("vitrine_refresh_token");
+                localStorage.removeItem("vitrine_user_id");
+                window.location.href = "login.html";
+                return;
+            }
+
+            token = novoToken;
+            resposta = await fetch(SUPABASE_URL + "/rest/v1/lojas?select=*", {
+                headers: {
+                    apikey: SUPABASE_ANON_KEY,
+                    Authorization: "Bearer " + token
+                }
+            });
         }
 
         const lojas = await resposta.json();
-        debugLog("passo4:lojas encontradas=" + (lojas ? lojas.length : "erro ao ler json"));
 
         if (!lojas || lojas.length === 0) {
             conteudo.innerHTML = `
@@ -211,9 +200,9 @@ async function carregarMinhaLoja() {
         // Libera a seção de produtos agora que sabemos o id da loja
         document.querySelector("#secao-produtos").style.display = "block";
         carregarProdutos(loja.id, token);
-        prepararFormularioProduto(loja.id, token);
+        prepararFormularioProduto(loja.id, token, loja.link_loja);
         prepararAcoesProdutos(loja.id, token);
-    } catch (erro) {
+    } catch {
         conteudo.innerHTML = `<p>Não conseguimos carregar sua loja agora. Tenta de novo em instantes.</p>`;
     }
 }
@@ -293,7 +282,7 @@ async function carregarProdutos(lojaId, token) {
         }
 
         lista.innerHTML = produtos.map(montarItemProduto).join("");
-    } catch (erro) {
+    } catch {
         lista.innerHTML = `<p class="minhaloja-carregando">Não foi possível carregar os produtos agora.</p>`;
     }
 }
@@ -359,14 +348,28 @@ function prepararAcoesProdutos(lojaId, token) {
 }
 
 /**
- * Prepara o envio do formulário de novo produto.
  * @param {string} lojaId
  * @param {string} token
+ * @param {string | null | undefined} linkLoja
  */
-function prepararFormularioProduto(lojaId, token) {
+function prepararFormularioProduto(lojaId, token, linkLoja) {
     const form = document.querySelector("#form-produto");
     const mensagem = document.querySelector("#form-produto-mensagem");
     const container = document.querySelector("#lista-campos-links");
+
+    /**
+     * @param {string} url
+     * @returns {string | null}
+     */
+    function extrairDominio(url) {
+        try {
+            return new URL(url).hostname.replace(/^www\./, "");
+        } catch {
+            return null;
+        }
+    }
+
+    const dominioDaLoja = linkLoja ? extrairDominio(linkLoja) : null;
 
     /** Cria uma linha de link nova e vazia. */
     function criarLinhaLink() {
@@ -375,6 +378,7 @@ function prepararFormularioProduto(lojaId, token) {
         linha.innerHTML = `
             <input type="url" class="campo-link-item" placeholder="https://...">
             <div class="linha-link-status"></div>
+            <button type="button" class="linha-link-remover" aria-label="Remover link">×</button>
         `;
         return linha;
     }
@@ -391,10 +395,110 @@ function prepararFormularioProduto(lojaId, token) {
         }
     }
 
-    container.addEventListener("input", (evento) => {
-        if (evento.target.classList.contains("campo-link-item")) {
-            garantirLinhaVaziaNoFinal();
+    // Marca em vermelho qualquer linha cujo link se repete em
+    // outra linha já preenchida.
+    function marcarLinksRepetidos() {
+        const linhas = Array.from(container.querySelectorAll(".linha-link"));
+        const valores = linhas.map((linha) => linha.querySelector(".campo-link-item").value.trim());
+
+        linhas.forEach((linha, indice) => {
+            const valor = valores[indice];
+            const repetido = valor.length > 0 && valores.filter((v) => v === valor).length > 1;
+
+            linha.classList.toggle("repetido", repetido);
+        });
+    }
+
+    /** @param {string} texto */
+    function pareceLink(texto) {
+        try {
+            new URL(texto);
+            return true;
+        } catch {
+            return false;
         }
+    }
+
+    /** @param {string} pedaco */
+    function removerEspacos(pedaco) {
+        return pedaco.trim();
+    }
+
+    /**
+     * Mostra (ou esconde) um aviso pequeno embaixo da linha,
+     * avisando quando o link colado não parece ser da mesma
+     * loja cadastrada. Não bloqueia o envio, é só um alerta.
+     * @param {Element} linha
+     */
+    function checarDominioDaLinha(linha) {
+        if (!dominioDaLoja) {
+            linha.classList.remove("fora-do-dominio");
+            return;
+        }
+
+        const valor = linha.querySelector(".campo-link-item").value.trim();
+
+        if (!valor) {
+            linha.classList.remove("fora-do-dominio");
+            return;
+        }
+
+        const dominioDoLink = extrairDominio(valor);
+        const foraDoDominio = Boolean(dominioDoLink) && dominioDoLink !== dominioDaLoja;
+
+        linha.classList.toggle("fora-do-dominio", foraDoDominio);
+
+        // DEBUG TEMPORÁRIO -- lê a cor de verdade que o navegador está usando
+        const estiloReal = window.getComputedStyle(linha);
+        alert(
+            "DEBUG cor real | className: " + linha.className +
+            " | border-color: " + estiloReal.borderColor +
+            " | background: " + estiloReal.backgroundColor
+        );
+    }
+
+    // Depois de qualquer mudança no campo (digitando ou colando),
+    // checa se o texto tem mais de um link junto -- se tiver,
+    // separa em linhas diferentes. Checar assim (em vez de tentar
+    // "pegar" o momento exato de colar) é bem mais confiável no
+    // celular, onde o evento de colar às vezes não dispara direito.
+    container.addEventListener("input", (evento) => {
+        if (!evento.target.classList.contains("campo-link-item")) return;
+
+        const campo = evento.target;
+        const links = campo.value.split(/\s+/).map(removerEspacos).filter(pareceLink);
+
+        if (links.length > 1) {
+            const linhaAtual = campo.closest(".linha-link");
+            campo.value = links[0];
+
+            for (let i = 1; i < links.length; i++) {
+                const novaLinha = criarLinhaLink();
+                novaLinha.querySelector(".campo-link-item").value = links[i];
+                linhaAtual.insertAdjacentElement("afterend", novaLinha);
+                checarDominioDaLinha(novaLinha);
+            }
+        }
+
+        checarDominioDaLinha(campo.closest(".linha-link"));
+        garantirLinhaVaziaNoFinal();
+        marcarLinksRepetidos();
+    });
+
+    // Apaga a linha clicada no botão ×. Sempre garante que
+    // sobra pelo menos uma linha vazia no final.
+    container.addEventListener("click", (evento) => {
+        const botaoRemover = evento.target.closest(".linha-link-remover");
+        if (!botaoRemover) return;
+
+        botaoRemover.closest(".linha-link").remove();
+
+        if (container.children.length === 0) {
+            container.appendChild(criarLinhaLink());
+        }
+
+        garantirLinhaVaziaNoFinal();
+        marcarLinksRepetidos();
     });
 
     form.addEventListener("submit", async (evento) => {
@@ -411,6 +515,14 @@ function prepararFormularioProduto(lojaId, token) {
 
         if (linhasPreenchidas.length === 0) {
             mensagem.textContent = "Cole pelo menos um link antes de enviar.";
+            return;
+        }
+
+        marcarLinksRepetidos();
+        const temRepetido = linhasPreenchidas.some((linha) => linha.classList.contains("repetido"));
+
+        if (temRepetido) {
+            mensagem.textContent = "Tem link repetido (em vermelho). Corrige antes de enviar.";
             return;
         }
 
@@ -444,7 +556,7 @@ function prepararFormularioProduto(lojaId, token) {
                     apikey: SUPABASE_ANON_KEY,
                     Authorization: "Bearer " + token,
                     "Content-Type": "application/json",
-                    Prefer: "return=minimal"
+                    Prefer: "return=representation"
                 },
                 body: JSON.stringify(novosProdutos)
             });
@@ -457,20 +569,55 @@ function prepararFormularioProduto(lojaId, token) {
 
             mensagem.textContent = "Links salvos! Buscando dados dos produtos na sua loja...";
 
+            /** @type {any[]} */
+            const produtosCriados = await resposta.json();
+
+            // Liga cada linha da tela ao id do produto que acabou de
+            // ser criado (mesma ordem de envio e de retorno).
+            const linhaPorId = {};
+            linhasPreenchidas.forEach((linha, indice) => {
+                const produtoCriado = produtosCriados[indice];
+                if (produtoCriado) linhaPorId[produtoCriado.id] = linha;
+            });
+
             // Aciona o robo agora mesmo, sem esperar a proxima rodada programada.
+            let resultadosRobo = null;
             try {
-                await fetch(URL_ROBO_ATUALIZAR, {
+                const respostaRobo = await fetch(URL_ROBO_ATUALIZAR, {
                     method: "POST",
                     headers: { Authorization: "Bearer " + SUPABASE_ANON_KEY }
                 });
-            } catch (erroRobo) {
+                const corpoRobo = await respostaRobo.json();
+                resultadosRobo = corpoRobo.resultados;
+            } catch {
                 // Se o robo falhar agora, a proxima rodada programada ainda pega esses produtos.
             }
 
-            linhasPreenchidas.forEach((linha) => {
-                linha.classList.remove("carregando");
-                linha.classList.add("pronto");
-            });
+            const statusComErro = ["falha ao acessar o link", "preco nao encontrado na pagina", "erro de conexao", "erro ao salvar"];
+
+            linhasPreenchidas.forEach((linha) => linha.classList.remove("carregando"));
+
+            /** @param {any} resultado */
+            function aplicarResultadoNaLinha(resultado) {
+                const linha = linhaPorId[resultado.id];
+                if (!linha) return;
+
+                /** @param {string} statusEsperado */
+                function statusComecaCom(statusEsperado) {
+                    return Boolean(resultado.status) && resultado.status.startsWith(statusEsperado);
+                }
+
+                const deuErro = statusComErro.some(statusComecaCom);
+                linha.classList.add(deuErro ? "erro" : "pronto");
+            }
+
+            if (resultadosRobo) {
+                resultadosRobo.forEach(aplicarResultadoNaLinha);
+            } else {
+                // Robô não respondeu agora -- marca como pronto mesmo assim,
+                // a rodada programada ainda vai completar os dados.
+                linhasPreenchidas.forEach((linha) => linha.classList.add("pronto"));
+            }
 
             mensagem.textContent = linhasPreenchidas.length + " produto(s) adicionado(s)!";
 
@@ -479,13 +626,13 @@ function prepararFormularioProduto(lojaId, token) {
 
             carregarProdutos(lojaId, token);
 
-            // Depois de mostrar o verde por um instante, volta pra uma
+            // Depois de mostrar o resultado por um instante, volta pra uma
             // única linha vazia, pronta pro próximo lote de links.
             setTimeout(() => {
                 container.innerHTML = "";
                 container.appendChild(criarLinhaLink());
             }, 1200);
-        } catch (erro) {
+        } catch {
             linhasPreenchidas.forEach((linha) => linha.classList.remove("carregando"));
             mensagem.textContent = "Erro de conexao. Tenta de novo em instantes.";
         }
