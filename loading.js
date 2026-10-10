@@ -5,6 +5,24 @@
    físico de voltar do celular)
 ========================= */
 
+/**
+ * Escapa texto antes de inserir no HTML, pra evitar que nome
+ * ou descrição de produto (que vem de sites externos, via robô)
+ * consiga injetar código na página.
+ * @param {string | null | undefined} texto
+ * @returns {string}
+ */
+function escaparHtml(texto) {
+    if (texto === null || texto === undefined) return "";
+
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 // Pra cadastrar uma tela/menu novo, só adicionar
 // um item aqui — não precisa escrever JS novo.
 
@@ -285,18 +303,93 @@ function nomeSecoProduto(nomeCompleto) {
     return resultado || nomeCompleto;
 }
 
+/**
+ * Lista de categorias reconhecidas pelo nome do produto.
+ * Cada item: [palavra que aparece no nome, categoria mostrada].
+ * Pra ensinar uma categoria nova, é só acrescentar uma linha.
+ * @type {string[][]}
+ */
+const CATEGORIAS_POR_PALAVRA = [
+    ["mochila", "Mochila"],
+    ["bolsa", "Bolsa"],
+    ["necessaire", "Necessaire"],
+    ["ecobag", "Ecobag"],
+    ["lacinho", "Laço"],
+    ["laco", "Laço"],
+    ["tiara", "Tiara"],
+    ["presilha", "Presilha"],
+    ["xuxinha", "Xuxinha"],
+    ["scrunchie", "Xuxinha"],
+    ["brinco", "Brinco"],
+    ["colar", "Colar"],
+    ["pulseira", "Pulseira"],
+    ["anel", "Anel"],
+    ["caneca", "Caneca"],
+    ["copo", "Copo"],
+    ["garrafa", "Garrafa"],
+    ["camiseta", "Camiseta"],
+    ["camisa", "Camisa"],
+    ["blusa", "Blusa"],
+    ["vestido", "Vestido"],
+    ["calca", "Calça"],
+    ["short", "Short"],
+    ["bermuda", "Bermuda"],
+    ["saia", "Saia"],
+    ["tenis", "Tênis"],
+    ["sandalia", "Sandália"],
+    ["bone", "Boné"],
+    ["meia", "Meia"],
+    ["caderno", "Caderno"],
+    ["agenda", "Agenda"],
+    ["caneta", "Caneta"],
+    ["capa", "Capa"],
+    ["case", "Capinha"],
+    ["chaveiro", "Chaveiro"],
+    ["almofada", "Almofada"],
+    ["toalha", "Toalha"],
+    ["vela", "Vela"],
+    ["quadro", "Quadro"],
+    ["kit", "Kit"]
+];
+
+/**
+ * Descobre a categoria do produto olhando as palavras do nome
+ * (sem acento e sem diferença de maiúscula). Se não reconhecer
+ * nenhuma, devolve um texto genérico.
+ * @param {string} nome
+ * @returns {string}
+ */
+function categoriaDoProduto(nome) {
+    if (!nome) return "Achado da loja";
+
+    const nomeLimpo = nome
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "");
+
+    const palavras = nomeLimpo.split(/[^a-z0-9]+/);
+
+    for (let i = 0; i < CATEGORIAS_POR_PALAVRA.length; i++) {
+        const [palavraChave, categoria] = CATEGORIAS_POR_PALAVRA[i];
+
+        if (palavras.includes(palavraChave)) return categoria;
+    }
+
+    return "Achado da loja";
+}
+
 /** @param {any} produto */
 function criarCardProdutoHome(produto) {
     const card = document.createElement("div");
     card.className = "card";
 
     const imagemHtml = produto.imagem
-        ? `<img src="${produto.imagem}" alt="${produto.nome}">`
+        ? `<img src="${escaparHtml(produto.imagem)}" alt="${escaparHtml(produto.nome)}">`
         : "";
 
     card.innerHTML = `
         <div class="card-info">${imagemHtml}</div>
-        <span class="card-titulo">${nomeSecoProduto(produto.nome)}</span>
+        <span class="card-titulo">${escaparHtml(categoriaDoProduto(produto.nome))}</span>
     `;
 
     return card;
@@ -314,8 +407,8 @@ function criarGrupoLoja(slug, loja) {
     const titulo = document.createElement("div");
     titulo.className = "grupo-titulo";
     titulo.innerHTML = `
-        <img src="${loja.logo || ''}" class="icone-titulo" alt="${loja.nome}">
-        <h2>${loja.nome}</h2>
+        <img src="${escaparHtml(loja.logo || '')}" class="icone-titulo" alt="${escaparHtml(loja.nome)}">
+        <h2>${escaparHtml(loja.nome)}</h2>
     `;
     titulo.style.cursor = "pointer";
     titulo.addEventListener("click", (evento) => {
@@ -339,19 +432,36 @@ function criarGrupoLoja(slug, loja) {
     const produtosComEstoque = loja.produtos.filter(produtoTemEstoque);
     const produtoDestaque = produtosComEstoque.length > 0 ? produtosComEstoque[0] : null;
 
+    // Posição do produto na lista completa da loja: é esse número
+    // que a página do item usa pra achar o produto certo.
+    const indiceDestaque = produtoDestaque ? loja.produtos.indexOf(produtoDestaque) : -1;
+
+    function abrirPaginaDoProduto() {
+        if (indiceDestaque < 0) return;
+
+        window.location.href = "produto.html?loja=" + encodeURIComponent(slug) + "&indice=" + indiceDestaque;
+    }
+
+    /** @param {HTMLElement} elemento */
+    function tornarAbrivelPeloToque(elemento) {
+        elemento.classList.add("abre-produto");
+        elemento.addEventListener("click", (evento) => {
+            evento.stopPropagation();
+            abrirPaginaDoProduto();
+        });
+    }
+
     if (produtoDestaque) {
         adicionarCardNaFileira(produtoDestaque);
+        tornarAbrivelPeloToque(/** @type {HTMLElement} */ (fileira.lastElementChild));
     }
 
     grupo.appendChild(fileira);
 
     if (produtoDestaque) {
-        const nomeCompleto = document.createElement("p");
-        nomeCompleto.className = "nome-completo-home";
-        nomeCompleto.textContent = produtoDestaque.nome;
-        grupo.appendChild(nomeCompleto);
-
-        grupo.appendChild(criarInfoProdutoHome(produtoDestaque));
+        const infoProduto = criarInfoProdutoHome(produtoDestaque);
+        tornarAbrivelPeloToque(infoProduto);
+        grupo.appendChild(infoProduto);
     }
 
     grupo.appendChild(titulo);

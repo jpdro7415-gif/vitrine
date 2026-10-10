@@ -38,7 +38,8 @@ async function carregarDadosSupabase() {
     const montarLoja = (loja) => {
         lojasVitrine[loja.slug] = {
             nome: loja.nome,
-            corPrincipal: loja.cor_principal,
+            // Todas as lojas da Vitrine usam o mesmo azul (ignora a cor salva no banco)
+            corPrincipal: "#3355b3",
             corFundo: loja.cor_fundo || undefined,
             logo: loja.logo,
             anoEntrada: loja.ano_entrada || undefined,
@@ -68,6 +69,8 @@ async function carregarDadosSupabase() {
             preco: formatarPreco(produto.preco),
             precoOriginal: formatarPreco(produto.preco_original),
             imagem: produto.imagem,
+            imagens: Array.isArray(produto.imagens) && produto.imagens.length > 0 ? produto.imagens : undefined,
+            linkProduto: produto.link_produto || undefined,
             avaliacao: produto.avaliacao || undefined,
             numeroAvaliacoes: produto.numero_avaliacoes || undefined,
             vendidos: produto.vendidos || undefined,

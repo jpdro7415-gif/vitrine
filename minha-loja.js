@@ -430,31 +430,46 @@ function prepararFormularioProduto(lojaId, token, linkLoja) {
      * loja cadastrada. Não bloqueia o envio, é só um alerta.
      * @param {Element} linha
      */
+    /** @param {Element} linha */
+    function pintarForaDoDominio(linha) {
+        linha.style.borderColor = "#d64545";
+        linha.style.backgroundColor = "#fdeceb";
+        const campo = linha.querySelector(".campo-link-item");
+        if (campo) campo.style.color = "#d64545";
+        linha.dataset.foraDoDominio = "true";
+    }
+
+    /** @param {Element} linha */
+    function limparCorDominio(linha) {
+        linha.style.borderColor = "";
+        linha.style.backgroundColor = "";
+        const campo = linha.querySelector(".campo-link-item");
+        if (campo) campo.style.color = "";
+        linha.dataset.foraDoDominio = "false";
+    }
+
+    /** @param {Element} linha */
     function checarDominioDaLinha(linha) {
         if (!dominioDaLoja) {
-            linha.classList.remove("fora-do-dominio");
+            limparCorDominio(linha);
             return;
         }
 
         const valor = linha.querySelector(".campo-link-item").value.trim();
 
         if (!valor) {
-            linha.classList.remove("fora-do-dominio");
+            limparCorDominio(linha);
             return;
         }
 
         const dominioDoLink = extrairDominio(valor);
         const foraDoDominio = Boolean(dominioDoLink) && dominioDoLink !== dominioDaLoja;
 
-        linha.classList.toggle("fora-do-dominio", foraDoDominio);
-
-        // DEBUG TEMPORÁRIO -- lê a cor de verdade que o navegador está usando
-        const estiloReal = window.getComputedStyle(linha);
-        alert(
-            "DEBUG cor real | className: " + linha.className +
-            " | border-color: " + estiloReal.borderColor +
-            " | background: " + estiloReal.backgroundColor
-        );
+        if (foraDoDominio) {
+            pintarForaDoDominio(linha);
+        } else {
+            limparCorDominio(linha);
+        }
     }
 
     // Depois de qualquer mudança no campo (digitando ou colando),
@@ -526,8 +541,59 @@ function prepararFormularioProduto(lojaId, token, linkLoja) {
             return;
         }
 
+        const temForaDoDominio = linhasPreenchidas.some((linha) => linha.dataset.foraDoDominio === "true");
+
+        if (temForaDoDominio) {
+            mensagem.textContent = "Tem link que não parece ser da sua loja (em vermelho). Corrige antes de enviar.";
+            return;
+        }
+
+        // Checa se algum link já foi cadastrado antes (em outro envio),
+        // pra não deixar duplicar o mesmo produto na loja.
+        mensagem.textContent = "Conferindo se algum link já foi cadastrado...";
+
+        /** @param {any} produto */
+        function pegarLinkDoProduto(produto) {
+            return produto.link_produto;
+        }
+
+        let linksJaSalvos = [];
+        try {
+            const respostaExistentes = await fetch(
+                SUPABASE_URL + "/rest/v1/produtos?loja_id=eq." + lojaId + "&select=link_produto",
+                {
+                    headers: {
+                        apikey: SUPABASE_ANON_KEY,
+                        Authorization: "Bearer " + token
+                    }
+                }
+            );
+            const produtosExistentes = await respostaExistentes.json();
+            linksJaSalvos = produtosExistentes.map(pegarLinkDoProduto);
+        } catch {
+            // Se não der pra conferir agora, segue em frente sem bloquear --
+            // melhor deixar cadastrar do que travar o lojista por um erro de rede.
+        }
+
+        /** @param {Element} linha */
+        function linkJaExiste(linha) {
+            const valor = linha.querySelector(".campo-link-item").value.trim();
+            return linksJaSalvos.includes(valor);
+        }
+
+        const linhasComLinkExistente = linhasPreenchidas.filter(linkJaExiste);
+
+        if (linhasComLinkExistente.length > 0) {
+            linhasComLinkExistente.forEach(pintarForaDoDominio);
+            mensagem.textContent = "Tem link que já está cadastrado na sua loja (em vermelho). Corrige antes de enviar.";
+            return;
+        }
+
         mensagem.textContent = "Salvando " + linhasPreenchidas.length + " link(s)...";
-        linhasPreenchidas.forEach((linha) => linha.classList.add("carregando"));
+        linhasPreenchidas.forEach((linha) => {
+            limparCorDominio(linha);
+            linha.classList.add("carregando");
+        });
 
         const parcelas = Number(document.querySelector("#produto-parcelas").value) || 1;
         const freteGratis = document.querySelector("#produto-frete-gratis").checked;

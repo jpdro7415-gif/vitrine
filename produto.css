@@ -5,7 +5,7 @@
 }
 
 :root {
-    --cor-principal: #333333;
+    --cor-principal: #3355b3;
 }
 
 body {
@@ -265,23 +265,6 @@ body {
 
     padding: 14px;
 
-    border: 1px solid var(--cor-principal);
-    border-radius: 12px;
-
-    background: transparent;
-
-    color: var(--cor-principal);
-    font-size: 15px;
-    font-weight: bold;
-
-    cursor: pointer;
-}
-
-.botao-adicionar-carrinho {
-    flex: 1;
-
-    padding: 14px;
-
     border: none;
     border-radius: 12px;
 
@@ -294,6 +277,25 @@ body {
     cursor: pointer;
 }
 
+.botao-adicionar-carrinho {
+    flex: 1;
+
+    padding: 14px;
+
+    border: 2px solid var(--cor-principal);
+    border-radius: 12px;
+
+    background: transparent;
+
+    color: var(--cor-principal);
+    font-size: 15px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
 .botao-adicionar-carrinho.adicionado {
     background: #2e7d32;
+    border-color: #2e7d32;
+    color: #ffffff;
 }

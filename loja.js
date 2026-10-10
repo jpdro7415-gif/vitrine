@@ -1,3 +1,21 @@
+/**
+ * Escapa texto antes de inserir no HTML, pra evitar que nome
+ * ou descrição de produto (que vem de sites externos, via robô)
+ * consiga injetar código na página.
+ * @param {string | null | undefined} texto
+ * @returns {string}
+ */
+function escaparHtml(texto) {
+    if (texto === null || texto === undefined) return "";
+
+    return String(texto)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+}
+
 // Descobre qual loja foi aberta pelo endereço
 // (ex: loja.html?loja=shopee)
 
@@ -26,7 +44,7 @@ function iniciarLoja() {
     if (!dadosLoja) {
         // Loja não encontrada no banco de dados — volta pra home
         // (substitui a página atual, não empilha mais uma)
-        window.location.replace("loading.html");
+        window.location.replace("index.html");
     }
 
     // Garante que o botão físico de voltar do celular sempre volte
@@ -59,7 +77,7 @@ function iniciarLoja() {
         } else {
             // Não tinha nenhuma aba aberta — essa já era a tela padrão
             // da loja, então agora sim volta pra Vitrine.
-            window.location.replace("loading.html");
+            window.location.replace("index.html");
         }
     }
 
@@ -105,10 +123,10 @@ function iniciarLoja() {
         card.className = "produto-card";
 
         card.innerHTML = `
-            <img class="produto-imagem" src="${produto.imagem}" alt="${produto.nome}">
+            <img class="produto-imagem" src="${escaparHtml(produto.imagem)}" alt="${escaparHtml(produto.nome)}">
             <div class="produto-info">
-                <div class="produto-nome">${produto.nome}</div>
-                <div class="produto-preco">${produto.preco}</div>
+                <div class="produto-nome">${escaparHtml(produto.nome)}</div>
+                <div class="produto-preco">${escaparHtml(produto.preco)}</div>
             </div>
         `;
 
@@ -160,8 +178,8 @@ function iniciarLoja() {
         item.className = "loja-item";
 
         item.innerHTML = `
-            <img class="icone-loja-item" src="${logo}" alt="${nome}">
-            <span>${nome}</span>
+            <img class="icone-loja-item" src="${escaparHtml(logo)}" alt="${escaparHtml(nome)}">
+            <span>${escaparHtml(nome)}</span>
         `;
 
         item.addEventListener("click", (evento) => {
@@ -178,7 +196,7 @@ function iniciarLoja() {
     // direto pra Vitrine (o único nível que fica empilhado de verdade
     // é a ida inicial da Vitrine pra uma loja).
     criarItemLoja("Vitrine", "Vitrine-logo.png", () => {
-        window.location.replace("loading.html");
+        window.location.replace("index.html");
     });
 
     Object.keys(LOJAS_VITRINE).forEach((slug) => {
